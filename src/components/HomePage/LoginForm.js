@@ -1,7 +1,7 @@
 import { Box, Button, Grid, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import validator from 'validator'
 import { makeStyles } from '@mui/styles'
 import { asyncLogin } from '../../action/loginAction'

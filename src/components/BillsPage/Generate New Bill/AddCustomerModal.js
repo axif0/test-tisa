@@ -43,10 +43,12 @@ const AddCustomerModal = (props) => {
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                  }}
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                    backdrop: {
+                        timeout: 500,
+                    },
+                }}
             >
                 <Fade in={open}>
                     <Paper sx={{ width: { xs: '95%', sm: 'auto' }, maxWidth: 500, maxHeight: '90vh', overflow: 'auto' }}>

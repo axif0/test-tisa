@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material'
 import { asyncDeleteCustomer } from '../../action/customerAction'
 import { makeStyles } from '@mui/styles'

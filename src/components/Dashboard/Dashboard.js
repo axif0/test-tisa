@@ -20,7 +20,7 @@ const Dashboard = (props) => {
         <Container className={classes.container}>
             <Typography variant='h3' className={classes.title} sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>Dashboard</Typography>
             <Grid container spacing={{ xs: 2, md: 3 }}>
-                <Grid item lg={12} md={12} sm={12} xs={12}>
+                <Grid size={{ lg: 12, md: 12, sm: 12, xs: 12 }}>
                     <StatsContainer />
                 </Grid>
             </Grid>

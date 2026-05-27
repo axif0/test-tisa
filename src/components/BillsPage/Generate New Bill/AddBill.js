@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Container, Typography, Box, Grid } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import ProductSuggestion from './ProductSuggestion'
 import ProductListTable from './ProductListTable'
 import SummaryOfBill from './SummaryOfBill'
@@ -112,7 +112,7 @@ const AddBill = (props) => {
                 <AddCustomerModal />
             </Box>
             <Grid className={classes.gridContainer} container spacing={2}>
-                <Grid item lg={9} md={9} sm={12} xs={12}>
+                <Grid size={{ lg: 9, md: 9, sm: 12, xs: 12 }}>
                     <ProductSuggestion handleAddLineItem={handleAddLineItem} />
                     <ProductListTable 
                         items={lineItems} 
@@ -120,7 +120,7 @@ const AddBill = (props) => {
                         handleRemoveLineItem={handleRemoveLineItem}
                     />
                 </Grid>
-                <Grid item lg={3} md={3} sm={12} xs={12}>
+                <Grid size={{ lg: 3, md: 3, sm: 12, xs: 12 }}>
                     <SummaryOfBill 
                         handleCustomerInfo={handleCustomerInfo} 
                         lineItems={lineItems} 

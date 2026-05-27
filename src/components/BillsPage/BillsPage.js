@@ -61,7 +61,7 @@ const BillsPage = () => {
     return (
         <Container className={classes.container}>
             <Grid container spacing={2}>
-                <Grid className={classes.billTableSection} item lg={9} md={9} sm={12} xs={12}>
+                <Grid className={classes.billTableSection} size={{ lg: 9, md: 9, sm: 12, xs: 12 }}>
                     <Box 
                         display='flex'
                         flexDirection='row'
@@ -89,7 +89,7 @@ const BillsPage = () => {
                     </Box>
                     { bills.length > 0 && <BillsTable bills={allBills} resetSearch={resetSearch} /> }
                 </Grid>
-                <Grid className={classes.summarySection} item lg={3} md={3} sm={12} xs={12}>
+                <Grid className={classes.summarySection} size={{ lg: 3, md: 3, sm: 12, xs: 12 }}>
                     <SummarySection />        
                 </Grid>
             </Grid>

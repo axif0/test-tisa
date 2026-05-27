@@ -188,9 +188,9 @@ const ProductDetails = (props) => {
                             <Accordion key={bill._id} className={classes.accordion}>
                                 <AccordionSummary>
                                     <Box width='100%' display='flex' flexDirection='row' justifyContent='space-between'>
-                                        <Typography>{bill.customer.name || 'Unknown Customer'}</Typography>
-                                        <Typography>Qty: {englishToBengali(bill.items[0].quantity || 0)}</Typography>
-                                        <Typography>৳{englishToBengali(bill.items[0].subTotal || 0)}</Typography>
+                                        <Typography component="span">{bill.customer.name || 'Unknown Customer'}</Typography>
+                                        <Typography component="span">Qty: {englishToBengali(bill.items[0].quantity || 0)}</Typography>
+                                        <Typography component="span">৳{englishToBengali(bill.items[0].subTotal || 0)}</Typography>
                                     </Box>
                                 </AccordionSummary>
                                 <AccordionDetails>

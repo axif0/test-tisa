@@ -4,32 +4,32 @@
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^5.16.14",
-    "@mui/lab": "^5.0.0-alpha.168",
-    "@mui/material": "^5.16.14",
-    "@mui/styles": "^6.4.0",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/user-event": "^14.5.2",
-    "ajv": "^8.17.1",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.0.1",
+    "@mui/lab": "^9.0.0-beta.3",
+    "@mui/material": "^9.0.1",
+    "@mui/styles": "^6.4.8",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "ajv": "^8.20.0",
     "ajv-keywords": "^5.1.0",
-    "axios": "^1.6.7",
-    "html2pdf.js": "^0.10.2",
-    "jspdf": "^2.5.2",
-    "jspdf-autotable": "^3.8.2",
+    "axios": "^1.16.1",
+    "html2pdf.js": "^0.14.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "moment": "^2.30.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-google-charts": "^4.0.1",
-    "react-redux": "^9.1.0",
-    "react-router-dom": "^6.22.3",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-google-charts": "^5.2.1",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^7.15.1",
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "sweetalert2": "^11.15.10",
-    "validator": "^13.11.0",
-    "web-vitals": "^3.5.2"
+    "sweetalert2": "^11.26.25",
+    "validator": "^13.15.35",
+    "web-vitals": "^5.2.0"
   },
   "scripts": {
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
@@ -56,6 +56,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^10.1.0"
   }
 }

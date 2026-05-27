@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { Box, Drawer as MUIDrawer, List, ListItem, ListItemIcon, ListItemText, useMediaQuery, IconButton, Tooltip } from '@mui/material'
+import { Link } from 'react-router'
+import { Box, Drawer as MUIDrawer, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, IconButton, Tooltip } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useTheme } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -120,15 +120,15 @@ const Drawer = (props) => {
         <List>
             <Box display='flex' flexDirection='column' justifyContent='space-between' minHeight='90vh'>
                 <Box>
-                    <ListItem className={classes.menuItem} button onClick={isMobile ? handleMobileClose : (open ? handleDrawerClose : handleDrawerOpen)}>
+                    <ListItemButton className={classes.menuItem} onClick={isMobile ? handleMobileClose : (open ? handleDrawerClose : handleDrawerOpen)}>
                         <ListItemIcon className={classes.menuIcon}>
                             <MenuIcon fontSize='large'/>
                         </ListItemIcon>
                         {
                             (open || isMobile) && <ListItemText> <span className={classes.menuText}>Menu</span> </ListItemText>
                         }
-                    </ListItem>
-                    <ListItem className={classes.menuItem} button onClick={toggleTheme}>
+                    </ListItemButton>
+                    <ListItemButton className={classes.menuItem} onClick={toggleTheme}>
                         <ListItemIcon className={classes.menuIcon}>
                             <Tooltip title={mode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
                                 {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -137,44 +137,44 @@ const Drawer = (props) => {
                         {
                             (open || isMobile) && <ListItemText> <span className={classes.menuText}>{mode === 'dark' ? 'Light Mode' : 'Dark Mode'}</span> </ListItemText>
                         }
-                    </ListItem>
+                    </ListItemButton>
                     <Link to='/user' className={classes.menuLink} onClick={isMobile ? handleMobileClose : undefined}>
-                        <ListItem className={classes.menuItem} button sx={{ color: 'text.primary' }}>
+                        <ListItemButton className={classes.menuItem} sx={{ color: 'text.primary' }}>
                             <ListItemIcon className={classes.menuIcon}>
                                 <AccountCircleIcon />
                             </ListItemIcon>
                             {
                                 (open || isMobile) && <ListItemText> <span className={classes.menuText}>Profile</span> </ListItemText>
                             }
-                        </ListItem>
+                        </ListItemButton>
                     </Link>
                     {
                         menuItems.map((menu, i) => {
                             const { name, icon, link } = menu
                             return (
                                 <Link key={i} to={link} className={classes.menuLink} onClick={isMobile ? handleMobileClose : undefined}>
-                                    <ListItem onClick={!isMobile && open ? handleDrawerClose : null} className={classes.menuItem} button sx={{ color: 'text.primary' }}>
+                                    <ListItemButton onClick={!isMobile && open ? handleDrawerClose : null} className={classes.menuItem} sx={{ color: 'text.primary' }}>
                                         <ListItemIcon className={classes.menuIcon}>
                                             {icon}
                                         </ListItemIcon>
                                         {
                                             (open || isMobile) && <ListItemText> <span className={classes.menuText}>{name}</span> </ListItemText>
                                         }
-                                    </ListItem>
+                                    </ListItemButton>
                                 </Link>
                             )
                         })
                     }
                 </Box>
                 <Link to={'/login-or-register'} className={classes.menuLink}>
-                    <ListItem className={`${classes.menuItem} ${classes.menuLogout}`} button onClick={handleLogout}>
+                    <ListItemButton className={`${classes.menuItem} ${classes.menuLogout}`} onClick={handleLogout}>
                         <ListItemIcon className={classes.menuIcon}>
                             <ExitToAppIcon />
                         </ListItemIcon>
                         {
                             (open || isMobile) && <ListItemText> <span className={classes.menuText}>Logout</span> </ListItemText>
                         }
-                    </ListItem>
+                    </ListItemButton>
                 </Link>
             </Box>
         </List>

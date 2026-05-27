@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { Paper, Typography, Divider, Button, Container } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import CustomerSuggestion from './CustomerSuggestion'

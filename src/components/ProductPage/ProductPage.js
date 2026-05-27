@@ -96,7 +96,7 @@ const ProductPage = (props) => {
                 <Divider className={classes.divider} />
             </Container>
                 <Grid className={classes.pageContent} spacing={2} container disableGutters>
-                    <Grid item lg={8} md={8} sm={12} xs={12}>
+                    <Grid size={{ lg: 8, md: 8, sm: 12, xs: 12 }}>
                         <Box 
                             disableGutters 
                             display='flex' 
@@ -122,7 +122,7 @@ const ProductPage = (props) => {
                             handleUpdateProd={handleUpdateProd}
                         />
                     </Grid>
-                    <Grid item lg={4} md={4} sm={12} xs={12}>
+                    <Grid size={{ lg: 4, md: 4, sm: 12, xs: 12 }}>
                         <ProductDetails 
                             productId={viewProduct} 
                             resetViewProduct={resetViewProduct} 

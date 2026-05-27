@@ -29,7 +29,7 @@ const getDesignTokens = (mode) => ({
         MuiTableCell: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    ...(theme.palette.mode === 'dark' && {
+                    ...theme.applyStyles('dark', {
                         borderColor: 'rgba(255, 255, 255, 0.12)',
                     }),
                 }),

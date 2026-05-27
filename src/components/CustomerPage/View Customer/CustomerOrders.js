@@ -54,13 +54,13 @@ const CustomerOrders = (props) => {
                         sx={{ bgcolor: 'action.hover', borderBottom: '1px solid', borderColor: 'divider' }}
                     >
                         <Box className={classes.orderInfo} sx={{ flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 0 } }}>
-                            <Typography variant='h6'>
+                            <Typography component="span" variant='h6'>
                                 {moment(bill.date).format('DD/MM/YYYY, hh:mm A')}
                             </Typography>
-                            <Typography variant='h6'>
+                            <Typography component="span" variant='h6'>
                                 Order ID - {bill._id}
                             </Typography>
-                            <Typography variant='h6'>
+                            <Typography component="span" variant='h6'>
                                 Total - ৳{bill.total}
                             </Typography>
                         </Box>

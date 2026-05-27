@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { setLogin } from '../../action/loginAction'
 import HomePage from '../HomePage/HomePage'
