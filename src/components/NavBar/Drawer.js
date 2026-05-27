@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Box, Drawer as MUIDrawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Box, Drawer as MUIDrawer, List, ListItem, ListItemIcon, ListItemText, useMediaQuery, IconButton, Tooltip } from '@mui/material'
 import { makeStyles } from '@mui/styles'
+import { useTheme } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import PeopleIcon from '@mui/icons-material/People'
@@ -9,12 +10,16 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import ReceiptIcon from '@mui/icons-material/Receipt'
 import BarChartIcon from '@mui/icons-material/BarChart'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 import { useDispatch } from 'react-redux'
 import { setLogout } from '../../action/loginAction'
+import { ThemeContext } from '../../App'
 import { asyncGetBills } from '../../action/billsAction'
 import { asyncGetCustomers } from '../../action/customerAction'
 import { asyncGetProducts } from '../../action/productAction'
 import { asyncGetUser } from '../../action/userAction'
+import Swal from 'sweetalert2'
 
 const useStyle = makeStyles({
     menuItem: {
@@ -30,19 +35,23 @@ const useStyle = makeStyles({
         fontWeight: 600
     },
     menuLink: {
-        textDecoration: 'none',
-        color: 'black'
+        textDecoration: 'none'
     },
     menuLogout:{
-        position: 'absolote',
-        top: '80%'
+        position: 'absolute',
+        bottom: '20px',
+        width: '100%'
     }
 })
 
 const Drawer = (props) => {
     const classes = useStyle()
     const dispatch = useDispatch()
+    const theme = useTheme()
+    const { mode, toggleTheme } = useContext(ThemeContext)
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'))
     const [ open, setOpen ] = useState(false)
+    const [ mobileOpen, setMobileOpen ] = useState(false)
 
     useEffect(() => {
         dispatch(asyncGetBills())
@@ -59,9 +68,29 @@ const Drawer = (props) => {
         setOpen(false)
     }
 
+    const handleMobileToggle = () => {
+        setMobileOpen(!mobileOpen)
+    }
+
+    const handleMobileClose = () => {
+        setMobileOpen(false)
+    }
+
     const handleLogout = () => {
-        localStorage.removeItem('tishaUser')
-        dispatch(setLogout())
+        Swal.fire({
+            title: 'Logout?',
+            text: 'You will be logged out of your account',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, logout!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('tishaUser')
+                dispatch(setLogout())
+            }
+        })
     }
 
     const menuItems = [
@@ -92,62 +121,96 @@ const Drawer = (props) => {
         }
     ]
 
+    const drawerContent = (
+        <List>
+            <Box display='flex' flexDirection='column' justifyContent='space-between' minHeight='90vh'>
+                <Box>
+                    <ListItem className={classes.menuItem} button onClick={isMobile ? handleMobileClose : (open ? handleDrawerClose : handleDrawerOpen)}>
+                        <ListItemIcon className={classes.menuIcon}>
+                            <MenuIcon fontSize='large'/>
+                        </ListItemIcon>
+                        {
+                            (open || isMobile) && <ListItemText> <span className={classes.menuText}>Menu</span> </ListItemText>
+                        }
+                    </ListItem>
+                    <ListItem className={classes.menuItem} button onClick={toggleTheme}>
+                        <ListItemIcon className={classes.menuIcon}>
+                            <Tooltip title={mode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+                                {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+                            </Tooltip>
+                        </ListItemIcon>
+                        {
+                            (open || isMobile) && <ListItemText> <span className={classes.menuText}>{mode === 'dark' ? 'Light Mode' : 'Dark Mode'}</span> </ListItemText>
+                        }
+                    </ListItem>
+                    <Link to='/user' className={classes.menuLink} onClick={isMobile ? handleMobileClose : undefined}>
+                        <ListItem className={classes.menuItem} button sx={{ color: 'text.primary' }}>
+                            <ListItemIcon className={classes.menuIcon}>
+                                <AccountCircleIcon />
+                            </ListItemIcon>
+                            {
+                                (open || isMobile) && <ListItemText> <span className={classes.menuText}>Profile</span> </ListItemText>
+                            }
+                        </ListItem>
+                    </Link>
+                    {
+                        menuItems.map((menu, i) => {
+                            const { name, icon, link } = menu
+                            return (
+                                <Link key={i} to={link} className={classes.menuLink} onClick={isMobile ? handleMobileClose : undefined}>
+                                    <ListItem onClick={!isMobile && open ? handleDrawerClose : null} className={classes.menuItem} button sx={{ color: 'text.primary' }}>
+                                        <ListItemIcon className={classes.menuIcon}>
+                                            {icon}
+                                        </ListItemIcon>
+                                        {
+                                            (open || isMobile) && <ListItemText> <span className={classes.menuText}>{name}</span> </ListItemText>
+                                        }
+                                    </ListItem>
+                                </Link>
+                            )
+                        })
+                    }
+                </Box>
+                <Link to={'/login-or-register'} className={classes.menuLink}>
+                    <ListItem className={`${classes.menuItem} ${classes.menuLogout}`} button onClick={handleLogout}>
+                        <ListItemIcon className={classes.menuIcon}>
+                            <ExitToAppIcon />
+                        </ListItemIcon>
+                        {
+                            (open || isMobile) && <ListItemText> <span className={classes.menuText}>Logout</span> </ListItemText>
+                        }
+                    </ListItem>
+                </Link>
+            </Box>
+        </List>
+    )
+
+    if (isMobile) {
+        return (
+            <>
+                <IconButton
+                    onClick={handleMobileToggle}
+                    sx={{ position: 'fixed', top: 10, left: 10, zIndex: 1200 }}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <MUIDrawer
+                    variant='temporary'
+                    open={mobileOpen}
+                    onClose={handleMobileClose}
+                    ModalProps={{ keepMounted: true }}
+                >
+                    {drawerContent}
+                </MUIDrawer>
+            </>
+        )
+    }
+
     return (
         <MUIDrawer 
             variant='permanent'
         >
-
-            <List>
-                <Box display='flex' flexDirection='column' justifyContent='space-between' minHeight='90vh'>
-                    <Box>
-                        <ListItem className={classes.menuItem} button onClick={open ? handleDrawerClose : handleDrawerOpen}>
-                            <ListItemIcon className={classes.menuIcon}>
-                                <MenuIcon fontSize='large'/>
-                            </ListItemIcon>
-                            {
-                                open && <ListItemText > <span className={classes.menuText}>Menu</span> </ListItemText>
-                            }
-                        </ListItem>
-                        <Link to='/profile' className={classes.menuLink}>
-                            <ListItem className={classes.menuItem} button>
-                                <ListItemIcon className={classes.menuIcon}>
-                                    <AccountCircleIcon />
-                                </ListItemIcon>
-                                {
-                                    open && <ListItemText> <span className={classes.menuText}>Profile</span> </ListItemText>
-                                }
-                            </ListItem>
-                        </Link>
-                        {
-                            menuItems.map((menu, i) => {
-                                const { name, icon, link } = menu
-                                return (
-                                    <Link key={i} to={link} className={classes.menuLink}>
-                                        <ListItem onClick={open ? handleDrawerClose : null} className={classes.menuItem} button>
-                                            <ListItemIcon className={classes.menuIcon}>
-                                                {icon}
-                                            </ListItemIcon>
-                                            {
-                                                open && <ListItemText> <span className={classes.menuText}>{name}</span> </ListItemText>
-                                            }
-                                        </ListItem>
-                                    </Link>
-                                )
-                            })
-                        }
-                    </Box>
-                    <Link to={'/login-or-register'} className={classes.menuLink}>
-                        <ListItem className={`${classes.menuItem} ${classes.menuLogout}`} button onClick={handleLogout}>
-                            <ListItemIcon className={classes.menuIcon}>
-                                <ExitToAppIcon />
-                            </ListItemIcon>
-                            {
-                                open && <ListItemText> <span className={classes.menuText}>Logout</span> </ListItemText>
-                            }
-                        </ListItem>
-                    </Link>
-                </Box>
-            </List>
+            {drawerContent}
         </MUIDrawer>
     )
 }

@@ -28,7 +28,7 @@ const OrderDetails = (props) => {
                 </Box>
                 <Box display='flex' flexDirection='column' alignItems='center'>
                     <Typography variant='body1'><strong>মোট টাকা:</strong></Typography>               
-                    <Typography variant='h2' align='center'>৳{calculateTotal(lineItems)}</Typography>
+                    <Typography variant='h2' align='center' sx={{ fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } }}>৳{calculateTotal(lineItems)}</Typography>
                 </Box>
             </Box>
         </Container>

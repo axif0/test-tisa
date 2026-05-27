@@ -12,22 +12,19 @@ const useStyle = makeStyles({
         fontWeight: 600
     },
     summaryContainer:{
-        height: '40vh'
+        minHeight: '150px'
     },
     summaryContent:{
-        height: '40%',
         padding: '15px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent:'space-evenly'
     },
     summary:{
-        height: '85vh'
+        height: 'auto'
     },
     addIcon:{
-        position: 'fixed',
-        bottom: "50px",
-        right: '60px'
+        position: 'fixed'
     }
 })
 
@@ -61,7 +58,7 @@ const SummarySection = (props) => {
             
                 <Link to='/addBill'>
                     <Tooltip title='Add New Bill'>
-                        <Fab className={classes.addIcon} color='primary'>
+                        <Fab className={classes.addIcon} color='primary' sx={{ bottom: { xs: 16, sm: 50 }, right: { xs: 16, sm: 60 } }}>
                             <AddIcon />
                         </Fab>
                     </Tooltip>

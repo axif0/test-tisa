@@ -6,28 +6,25 @@ import { asyncAddCustomer, asyncUpdateCustomer } from '../../action/customerActi
 import validator from 'validator'
 
 const useStyle = makeStyles({
-    // form:{
-    //     display:'flex',
-    //     flexDirection: 'row',
-    //     flexWrap: 'wrap'
-    // },
     formField:{
-        width: '24vw',
-        marginRight: '1vw'
+        width: '100%',
+        maxWidth: '250px',
+        marginRight: '1vw',
+        minWidth: '180px'
     },
     button: {
         display: 'flex',
-        width: '13vw',
         flexDirection:'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        gap: '8px'
     },
     addBtn: {
-        width: '6vw',
+        minWidth: '80px',
         height: '40px',
         marginTop: '7px'
     },
     cancelBtn: {
-        width: '6vw',
+        minWidth: '80px',
         height: '40px',
         marginTop: '7px'
     }
@@ -84,7 +81,7 @@ const CustomerForm = (props) => {
         validate()
         if(Object.keys(errors).length === 0){
             const formData = {
-                name: name[0].toUpperCase() + name.slice(1),
+                name: name.length > 0 ? name[0].toUpperCase() + name.slice(1) : name,
                 mobile: mobile,
                 email: email
             }
@@ -97,8 +94,8 @@ const CustomerForm = (props) => {
     }
 
     return (
-            <form className={classes.form} autoComplete='off' onSubmit={handleSubmit}>
-                <Box display='flex' flexDirection={handleClose ? 'column' : 'row'} flexWrap='wrap'>
+            <form autoComplete='off' onSubmit={handleSubmit}>
+                <Box display='flex' flexDirection={handleClose ? 'column' : 'row'} flexWrap='wrap' gap={1}>
                     <TextField 
                         className={classes.formField}
                         name='name'

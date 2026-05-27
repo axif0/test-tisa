@@ -13,11 +13,11 @@ const useStyle = makeStyles({
         fontWeight: '700'
     },
     container: {
-        width: '90vw',
+        width: '100%',
         padding: '2vh 1vw'
     },
     gridContainer: {
-        height: '85vh'
+        minHeight: '60vh'
     }
 })
 
@@ -25,7 +25,7 @@ const AddBill = (props) => {
     const classes = useStyle()
     const navigate = useNavigate()
     const [ lineItems, setLineItems ] = useState([])
-    const [ customerInfo, setCustomerInfo ] = useState([])
+    const [ customerInfo, setCustomerInfo ] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
     // functions related to lineitems
@@ -81,10 +81,11 @@ const AddBill = (props) => {
     }
 
     const handleGenerateBillError = (error) => {
+        const message = typeof error === 'string' ? error : (error?.message || 'Please check all required fields and try again')
         Swal.fire({
             icon: 'error',
             title: 'Bill Generation Failed',
-            text: error.response?.data?.message || 'Please check all required fields and try again',
+            text: message,
         })
     }
 
@@ -104,13 +105,14 @@ const AddBill = (props) => {
                 <Typography 
                     className={classes.title} 
                     variant='h3'
+                    sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}
                 >
                     New Bill
                 </Typography>
                 <AddCustomerModal />
             </Box>
             <Grid className={classes.gridContainer} container spacing={2}>
-                <Grid item lg={9} md={9} sm={12}>
+                <Grid item lg={9} md={9} sm={12} xs={12}>
                     <ProductSuggestion handleAddLineItem={handleAddLineItem} />
                     <ProductListTable 
                         items={lineItems} 
@@ -118,7 +120,7 @@ const AddBill = (props) => {
                         handleRemoveLineItem={handleRemoveLineItem}
                     />
                 </Grid>
-                <Grid item lg={3} md={3} sm={12}>
+                <Grid item lg={3} md={3} sm={12} xs={12}>
                     <SummaryOfBill 
                         handleCustomerInfo={handleCustomerInfo} 
                         lineItems={lineItems} 

@@ -1,4 +1,5 @@
 import { getData, saveData } from '../services/githubDB'
+import Swal from 'sweetalert2'
 
 export const setProducts = (data) => {
     return {
@@ -34,7 +35,7 @@ export const asyncGetProducts = () => {
             const data = await getData('products.json')
             dispatch(setProducts(data))
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -49,7 +50,7 @@ export const asyncAddProducts = (data, reset) => {
             dispatch(addProduct(newProduct))
             reset()
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -64,7 +65,7 @@ export const asyncUpdateProducts = (id, data, reset) => {
             dispatch(updateProduct(updatedProduct))
             reset()
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -78,7 +79,7 @@ export const asyncDeleteProducts = (id) => {
             await saveData('products.json', updated)
             dispatch(deleteProduct(product))
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -92,7 +93,7 @@ export const asyncProductDetail = (id, stateChange) => {
                 stateChange(product)
             }
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }

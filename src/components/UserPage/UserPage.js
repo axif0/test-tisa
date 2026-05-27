@@ -14,32 +14,26 @@ const useStyle = makeStyles({
 
 const UserPage = (props) => {
     const userDetails = useSelector(state => state.user)
-    // const dispatch = useDispatch()
     const classes = useStyle()
-    
-    // useEffect(() => {
-    //     dispatch(asyncGetUser())
-    // }, [])
 
     return (
         <Container maxWidth='sm'>
             <Box>
-                <Typography className={classes.title} variant='h3' align='center'>User Profile</Typography>
+                <Typography className={classes.title} variant='h3' align='center' sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>User Profile</Typography>
             </Box>
-            <Box display='flex' flexDirection='row' justifyContent='space-evenly' alignItems='center' height='70vh'>
+            <Box display='flex' flexDirection='row' flexWrap='wrap' justifyContent='space-evenly' alignItems='center' minHeight='50vh'>
                 <Box>
-                    <Typography className={classes.keys} variant='h5'>Name: </Typography>
-                    <Typography className={classes.keys} variant='h5'>Email: </Typography>
-                    <Typography className={classes.keys} variant='h5'>Business Name: </Typography>
-                    <Typography className={classes.keys} variant='h5'>Address: </Typography>
+                    <Typography className={classes.keys} variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Name: </Typography>
+                    <Typography className={classes.keys} variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Email: </Typography>
+                    <Typography className={classes.keys} variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Business Name: </Typography>
+                    <Typography className={classes.keys} variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>Address: </Typography>
                 </Box>
                 <Box>
-                    <Typography variant='h5'>{userDetails.username}</Typography>
-                    <Typography variant='h5'>{userDetails.email}</Typography>
-                    <Typography variant='h5'>{userDetails.businessName}</Typography>
-                    <Typography variant='h5'>{userDetails.address}</Typography>
+                    <Typography variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>{userDetails.username || '-'}</Typography>
+                    <Typography variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>{userDetails.email || '-'}</Typography>
+                    <Typography variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>{userDetails.businessName || '-'}</Typography>
+                    <Typography variant='h5' sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>{userDetails.address || '-'}</Typography>
                 </Box>
-                    
             </Box>            
         </Container>
     )

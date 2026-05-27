@@ -84,8 +84,8 @@ const RegisterForm = (props) => {
     }
 
     return (
-        <Grid container justify='center'>
-            <Box display='block' width={350}>
+        <Grid container>
+            <Box display='block' sx={{ width: { xs: '100%', sm: 350 }, px: { xs: 2, sm: 0 } }}>
                 <Typography variant='h6'>Fill in the details to register</Typography>
                 <form noValidate autoComplete='off' onSubmit={handleSubmit}>
                     <TextField

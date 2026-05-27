@@ -3,14 +3,13 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import configureStore from './store/configureStore'
+import { flushAll } from './services/githubDB'
 import './index.css';
 import App from './App';
 
-const store = configureStore()
+window.addEventListener('beforeunload', () => { flushAll(); });
 
-store.subscribe(() => {
-  console.log('State updated', store.getState())
-})
+const store = configureStore()
 
 const router = {
   future: {

@@ -17,8 +17,10 @@ const useStyle = makeStyles({
     productRow: {
         display: 'flex',
         justifyContent: 'space-between',
-        padding: '8px 0',
-        borderBottom: '1px solid #eee'
+        padding: '8px 0'
+    },
+    noSales: {
+        marginTop: '10px'
     }
 })
 
@@ -70,13 +72,13 @@ const StatsContainer = (props) => {
     return(
         <>
             <Typography variant='h6' className={classes.statsHeader}>Overall Stats</Typography>
-            <Grid container spacing={6}>
+            <Grid container spacing={{ xs: 2, md: 6 }}>
                 <StatsItem statTitle={'মোট গ্রাহক'} statNumber={englishToBengali(customers.length)} />
                 <StatsItem statTitle={'মোট পণ্য'} statNumber={englishToBengali(products.length)} />
                 <StatsItem statTitle={'মোট অর্ডার'} statNumber={englishToBengali(bills.length)} />
             </Grid>
             <Typography variant='h6' className={classes.statsHeader}>Daily Stats</Typography>
-            <Grid container spacing={6}>
+            <Grid container spacing={{ xs: 2, md: 6 }}>
                 <StatsItem statTitle={'আজকের বিল সংখ্যা'} statNumber={englishToBengali(todayBills.length)} />
                 <StatsItem statTitle={'আজকের বিল'} statNumber={calculateTotal(todayBills)} />
                 <StatsItem statTitle={'মোট বিল'} statNumber={calculateTotal(bills)} />
@@ -87,13 +89,13 @@ const StatsContainer = (props) => {
                 <Typography variant='h6' className={classes.statsHeader}>আজকের বিক্রয়ের পরিমাণ</Typography>
                 {dailyProductStats.length > 0 ? (
                     dailyProductStats.map((product, index) => (
-                        <Box key={index} className={classes.productRow}>
+                        <Box key={index} className={classes.productRow} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
                             <Typography>{product.name}</Typography>
                             <Typography>{englishToBengali(product.quantity)}</Typography>
                         </Box>
                     ))
                 ) : (
-                    <Typography align="center" style={{ marginTop: '10px', color: 'gray' }}>
+                    <Typography align="center" className={classes.noSales} sx={{ color: 'text.secondary' }}>
                         আজ কোনো বিক্রয় হয়নি
                     </Typography>
                 )}

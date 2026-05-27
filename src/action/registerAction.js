@@ -1,11 +1,6 @@
 import { getData, saveData } from '../services/githubDB'
-
-async function hashPassword(password) {
-    const msgBuffer = new TextEncoder().encode(password)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-}
+import { hashPassword } from '../utils/hashPassword'
+import Swal from 'sweetalert2'
 
 export const asyncRegister = (data, changeTab, notify) => {
     return async (dispatch) => {
@@ -33,7 +28,7 @@ export const asyncRegister = (data, changeTab, notify) => {
             localStorage.setItem('tishaUser', JSON.stringify(userWithoutPassword))
             changeTab('login')
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Registration Failed', text: err.message })
         }
     }
 }

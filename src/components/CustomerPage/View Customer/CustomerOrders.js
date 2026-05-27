@@ -4,9 +4,8 @@ import { makeStyles } from '@mui/styles'
 import ViewOrderTable from './ViewOrderTable'
 import moment from 'moment'
 
-const useStyles = makeStyles({
+const useStyle = makeStyles({
     accordion: {
-        border: '1px solid rgba(0, 0, 0, .125)',
         boxShadow: 'none',
         '&:not(:last-child)': {
             borderBottom: 0,
@@ -19,8 +18,6 @@ const useStyles = makeStyles({
         },
     },
     accordionSummary: {
-        backgroundColor: 'rgba(0, 0, 0, .03)',
-        borderBottom: '1px solid rgba(0, 0, 0, .125)',
         marginBottom: -1,
         minHeight: 56,
         '&$expanded': {
@@ -28,7 +25,7 @@ const useStyles = makeStyles({
         },
     },
     accordionDetails: {
-        padding: '16px'  // equivalent to theme.spacing(2)
+        padding: '16px'
     },
     expanded: {},
     orderInfo: {
@@ -41,20 +38,22 @@ const useStyles = makeStyles({
 
 const CustomerOrders = (props) => {
     const { bills } = props
-    const classes = useStyles()
+    const classes = useStyle()
 
     return (
         <>
             <Typography variant='h5' align='center'>List of Orders - {bills.length}</Typography>
             {bills.map(bill => (
-                <Accordion 
+                    <Accordion 
                     key={bill._id}
                     className={classes.accordion}
+                    sx={{ border: '1px solid', borderColor: 'divider' }}
                 >
                     <AccordionSummary
                         className={classes.accordionSummary}
+                        sx={{ bgcolor: 'action.hover', borderBottom: '1px solid', borderColor: 'divider' }}
                     >
-                        <Box className={classes.orderInfo}>
+                        <Box className={classes.orderInfo} sx={{ flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 0 } }}>
                             <Typography variant='h6'>
                                 {moment(bill.date).format('DD/MM/YYYY, hh:mm A')}
                             </Typography>

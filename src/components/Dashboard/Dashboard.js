@@ -2,13 +2,11 @@ import React from 'react'
 import { Container, Typography, Grid } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import StatsContainer from './StatsContainer'
-import StatsChart from './StatsChart'
 
 const useStyle = makeStyles({
     container: {
-        width: '90vw',
-        padding: '2vh 1vw',
-        marginLeft: '60px'
+        width: '100%',
+        padding: '2vh 1vw'
     },
     title:{
         fontWeight: '700'
@@ -20,14 +18,11 @@ const Dashboard = (props) => {
 
     return (
         <Container className={classes.container}>
-            <Typography variant='h3' className={classes.title}>Dashboard</Typography>
-            <Grid container spacing={3}>
-                <Grid item lg={12}>
+            <Typography variant='h3' className={classes.title} sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>Dashboard</Typography>
+            <Grid container spacing={{ xs: 2, md: 3 }}>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
                     <StatsContainer />
                 </Grid>
-                {/* <Grid item lg={12}>
-                    <StatsChart />
-                </Grid> */}
             </Grid>
         </Container>
     )

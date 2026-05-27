@@ -9,27 +9,24 @@ const useStyle = makeStyles({
         height: '150px'
     },
     noInfo:{
-        wordBreak: 'break-word',
-        color: 'grey'
+        wordBreak: 'break-word'
     }
 })
 
 const CustomerSuggestion = (props) => {
     const { handleCustomerInfo } = props
     const customers = useSelector(state => state.customers)
-    const [ value, setValue ] = useState({})
+    const [ value, setValue ] = useState(null)
     const [ inputValue, setInputValue ] = useState('')
     const classes = useStyle()
 
     const handleValueChange = (e, newValue) => {
         setValue(newValue)
-        console.log(newValue)
         handleCustomerInfo(newValue)
     }
 
     const handleInputChange = (e, newInputValue) => {
         setInputValue(newInputValue)
-        console.log(newInputValue)
     }
 
     return (
@@ -40,12 +37,12 @@ const CustomerSuggestion = (props) => {
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
                 options={customers}
-                getOptionLabel={option => Object.keys(option).length>0 ? `${option.mobile} - ${option.name}` : ''}
+                getOptionLabel={option => option && option.mobile ? `${option.mobile} - ${option.name}` : ''}
                 renderInput={(params) => <TextField {...params} margin='dense' label='search customer' variant='outlined' />}
             />
 
             {
-                (value !== null && Object.keys(value).length>0) ? (
+                (value && value._id) ? (
                     <Box className={classes.custInfo} display='flex' flexDirection='column' justifyContent='center'>
                         <Typography variant='body1'><strong>Name: </strong>{value.name}</Typography>
                         <Typography variant='body1'><strong>Email: </strong>{value.email}</Typography>
@@ -53,7 +50,7 @@ const CustomerSuggestion = (props) => {
                     </Box>
                 ) : (
                     <Box className={classes.custInfo} display='flex' flexDirection='column' justifyContent='center'>
-                        <Typography className={classes.noInfo} variant='body1'>Enter mobile number of customer to display details</Typography>
+                        <Typography className={classes.noInfo} variant='body1' sx={{ color: 'text.secondary' }}>Enter mobile number of customer to display details</Typography>
                     </Box>
                 )
             }

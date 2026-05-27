@@ -8,9 +8,8 @@ import { englishToBengali, bengaliToEnglish, formatLargeNumber, isValidMixedNumb
 
 const useStyle = makeStyles({
     tableHeaderFooter: {
-        color: 'black',
         fontWeight: 600,
-        fontSize: 14
+        fontSize: '0.875rem'
     },
     quantityInput: {
         width: '100px',
@@ -114,18 +113,18 @@ const ProductListTable = (props) => {
                     <Table size='small'>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.tableHeaderFooter}>ক্রমিক</TableCell>
-                                <TableCell className={classes.tableHeaderFooter}>মালের নাম</TableCell>
-                                <TableCell className={classes.tableHeaderFooter}>দাম</TableCell>
-                                <TableCell className={`${classes.tableHeaderFooter} ${classes.quantityCell}`}>পরিমান</TableCell>
-                                <TableCell className={classes.tableHeaderFooter}>মোট</TableCell>
-                                <TableCell className={classes.tableHeaderFooter}>বাতিল</TableCell>
+                                <TableCell className={classes.tableHeaderFooter} sx={{ display: { xs: 'none', sm: 'table-cell' }, color: 'text.primary' }}>ক্রমিক</TableCell>
+                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>মালের নাম</TableCell>
+                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>দাম</TableCell>
+                                <TableCell className={`${classes.tableHeaderFooter} ${classes.quantityCell}`} sx={{ color: 'text.primary' }}>পরিমান</TableCell>
+                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>মোট</TableCell>
+                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>বাতিল</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {items.map((product, index) => (
                                 <TableRow key={product._id}>
-                                    <TableCell>{englishToBengali(index + 1)}</TableCell>
+                                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{englishToBengali(index + 1)}</TableCell>
                                     <TableCell>{product.name}</TableCell>
                                     <TableCell>৳{formatNumber(product.price, 2)}</TableCell>
                                     <TableCell className={classes.quantityCell}>

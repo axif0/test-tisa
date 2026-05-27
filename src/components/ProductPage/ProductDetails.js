@@ -9,7 +9,8 @@ import { englishToBengali } from '../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
     container: {
-        width: '400px',
+        width: '100%',
+        maxWidth: '400px',
         padding: '20px',
         maxHeight: '80vh',
         overflowY: 'auto'
@@ -19,8 +20,7 @@ const useStyle = makeStyles({
     },
     noProduct: {
         width: '150px',
-        wordBreak: 'break-word',
-        color: 'grey'
+        wordBreak: 'break-word'
     },
     detailsTitle: {
         textAlign: 'center',
@@ -34,7 +34,6 @@ const useStyle = makeStyles({
     statsBox: {
         padding: '15px',
         marginBottom: '10px',
-        backgroundColor: '#f5f5f5',
         borderRadius: '4px'
     },
     ordersList: {
@@ -119,7 +118,7 @@ const ProductDetails = (props) => {
     if (!productId) {
         return (
             <Paper className={classes.container}>
-                <Typography className={classes.noProduct} variant='h6'>
+                <Typography className={classes.noProduct} variant='h6' sx={{ color: 'text.secondary' }}>
                     Select a product to view its details
                 </Typography>
             </Paper>
@@ -159,19 +158,19 @@ const ProductDetails = (props) => {
             </Box>
 
             <Box className={classes.statsContainer}>
-                <Paper className={classes.statsBox}>
+                <Paper className={classes.statsBox} sx={{ bgcolor: 'grey.100' }}>
                     <Typography variant='h6' align='center'>মোট অর্ডার</Typography>
                     <Typography variant='h4' align='center'>
                         {englishToBengali(productData?.stats?.totalOrders || 0)}
                     </Typography>
                 </Paper>
-                <Paper className={classes.statsBox}>
+                <Paper className={classes.statsBox} sx={{ bgcolor: 'grey.100' }}>
                     <Typography variant='h6' align='center'>মোট বিক্রয়</Typography>
                     <Typography variant='h4' align='center'>
                         {englishToBengali(productData?.stats?.totalQuantity || 0)}
                     </Typography>
                 </Paper>
-                <Paper className={classes.statsBox}>
+                <Paper className={classes.statsBox} sx={{ bgcolor: 'grey.100' }}>
                     <Typography variant='h6' align='center'>মোট আয়</Typography>
                     <Typography variant='h4' align='center'>
                         ৳{englishToBengali(productData?.stats?.totalAmount || 0)}

@@ -9,7 +9,6 @@ import { asyncAddBill } from '../../../action/billsAction'
 
 const useStyle = makeStyles({
     summaryContainer: {
-        height: '65vh'
     }, 
     title: {
         fontWeight: '700',
@@ -24,13 +23,8 @@ const SummaryOfBill = (props) => {
     const navigate = useNavigate()
 
     const handleGenerateBill = () => {
-        // Validate required fields
-        if (!customerInfo._id || lineItems.length === 0) {
-            props.onGenerateError({ 
-                response: { 
-                    data: { message: 'Please select a customer and add at least one product' }
-                }
-            });
+        if (!customerInfo || !customerInfo._id || lineItems.length === 0) {
+            props.onGenerateError('Please select a customer and add at least one product');
             return;
         }
 
@@ -56,7 +50,8 @@ const SummaryOfBill = (props) => {
 
         dispatch(asyncAddBill(billData, navigate))
             .then(response => {
-                props.onGenerateSuccess(response.data._id);
+                const newBill = response?.data || response;
+                props.onGenerateSuccess(newBill._id);
             })
             .catch(error => {
                 props.onGenerateError(error);
@@ -67,7 +62,7 @@ const SummaryOfBill = (props) => {
     }
 
     return (
-        <Paper elevation={3} className={classes.summaryContainer}>
+        <Paper elevation={3} className={classes.summaryContainer} sx={{ minHeight: { xs: 'auto', sm: '65vh' }, p: { xs: 2, sm: 0 } }}>
             <Typography className={classes.title} variant='h5'>Summary of bill</Typography>
             <Divider />
             <Container>

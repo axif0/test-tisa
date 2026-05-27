@@ -10,19 +10,18 @@ import { makeStyles } from '@mui/styles'
 
 const useStyle = makeStyles({
     container: {
-        width: '100vw',
-        padding: '2vh 2vw',
-        marginLeft: '50px'
+        width: '100%',
+        padding: '2vh 2vw'
     },
     pageContent: {
-        width: '95vw',
+        width: '100%',
         marginTop: '2px'
     },
     title:{
         fontWeight: '700'
     },
     divider:{
-        width: '90vw'
+        width: '100%'
     }
 })
 
@@ -40,7 +39,6 @@ const ProductPage = (props) => {
         setProductList(products)
     }, [products])
 
-    // update product related functions
     const handleUpdateProd = (data) => {
         setUpdateProd(data)
     }
@@ -49,7 +47,6 @@ const ProductPage = (props) => {
         setUpdateProd({})
     }
 
-    //view product related functions
     const handleViewProduct = (data) => {
         setViewProduct(data)
     }
@@ -58,12 +55,10 @@ const ProductPage = (props) => {
         setViewProduct('')
     }
 
-    //deleting product functions
     const handleDeleteProduct = (id) => {
         dispatch(asyncDeleteProducts(id))
     }
 
-    //search related functions
     const handleSearchChange = (e) => {
         setSearch(e.target.value)
         filterProducts(e.target.value)
@@ -76,7 +71,7 @@ const ProductPage = (props) => {
 
     const filterProducts = (value) => {
         if(value.length > 0) {
-            const filteredProduct = products.filter(prod => prod.name.toLowerCase().includes(value.toLowerCase()))
+            const filteredProduct = products.filter(prod => (prod.name || '').toLowerCase().includes(value.toLowerCase()))
             setProductList(filteredProduct)
         } else {
             setProductList(products)
@@ -86,7 +81,7 @@ const ProductPage = (props) => {
     return (
         <Container className={classes.container}>
             <Container disableGutters>
-                <Typography className={classes.title} variant='h3'>Products</Typography>
+                <Typography className={classes.title} variant='h3' sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>Products</Typography>
                 {
                     Object.keys(updateProd).length > 0 ? (
                         <EditProduct updateProd={updateProd} resetUpdateProd={resetUpdateProd} />
@@ -97,13 +92,14 @@ const ProductPage = (props) => {
                 <Divider className={classes.divider} />
             </Container>
                 <Grid className={classes.pageContent} spacing={2} container disableGutters>
-                    <Grid item lg={8}>
+                    <Grid item lg={8} md={8} sm={12} xs={12}>
                         <Box 
                             disableGutters 
                             display='flex' 
                             flexDirection='row' 
                             alignItems='baseline' 
                             justifyContent='space-between'
+                            flexWrap='wrap'
                         >
                             <Typography variant='h5'>List of Products - {products.length} </Typography>
                             <TextField 
@@ -122,7 +118,7 @@ const ProductPage = (props) => {
                             handleUpdateProd={handleUpdateProd}
                         />
                     </Grid>
-                    <Grid item lg={4} >
+                    <Grid item lg={4} md={4} sm={12} xs={12}>
                         <ProductDetails 
                             productId={viewProduct} 
                             resetViewProduct={resetViewProduct} 

@@ -54,8 +54,8 @@ const LoginForm = (props) => {
     }
 
     return (
-        <Grid container justify='center'>
-            <Box display='block' width={320}>
+        <Grid container>
+            <Box display='block' sx={{ width: { xs: '100%', sm: 320 }, px: { xs: 2, sm: 0 } }}>
                 <Typography variant='h6'>Enter your credentials to login</Typography>
                 <form noValidate autoComplete='off' onSubmit={handleSubmit}>
                     <TextField 

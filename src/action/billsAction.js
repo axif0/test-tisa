@@ -1,9 +1,10 @@
 import { getData, saveData } from '../services/githubDB'
+import Swal from 'sweetalert2'
 
 export const setBills = (data) => {
     return {
         type: 'SET_BILLS',
-        payload: data.reverse()
+        payload: [...data].reverse()
     }
 }
 
@@ -27,7 +28,7 @@ export const asyncGetBills = () => {
             const data = await getData('bills.json')
             dispatch(setBills(data))
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -74,6 +75,9 @@ export const asyncDeleteBill = (id) => {
         try {
             const list = await getData('bills.json')
             const bill = list.find(b => b._id === id)
+            if (!bill) {
+                throw new Error('Bill not found')
+            }
             await saveData('bills.json', list.filter(b => b._id !== id))
             dispatch(deleteBill(bill))
             return bill

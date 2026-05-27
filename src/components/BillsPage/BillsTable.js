@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, CircularProgress } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { asyncDeleteBill, asyncGetBills } from '../../action/billsAction'
 import { asyncGetCustomers } from '../../action/customerAction'
 import moment from 'moment'
+import Swal from 'sweetalert2'
 import { englishToBengali, formatLargeNumber } from '../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
@@ -17,8 +18,6 @@ const useStyle = makeStyles({
         overflow: 'auto'
     },
     tableHeader: {
-        backgroundColor: 'black',
-        color: 'white',
         position: 'sticky',
         top: 0,
         zIndex: 1
@@ -69,18 +68,27 @@ const BillsTable = (props) => {
     }
 
     const handleDelete = (id) => {
-        const confirmDelete = window.confirm('Are you sure?')
-        if(confirmDelete){
-            dispatch(asyncDeleteBill(id))
-                .then(() => {
-                    dispatch(asyncGetBills())
-                    resetSearch()
-                })
-                .catch(error => {
-                    console.error('Delete failed:', error)
-                    alert('Failed to delete bill. Please try again.')
-                })
-        }
+        Swal.fire({
+            title: 'Delete this bill?',
+            text: 'This action cannot be undone',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch(asyncDeleteBill(id))
+                    .then(() => {
+                        dispatch(asyncGetBills())
+                        resetSearch()
+                    })
+                    .catch(error => {
+                        console.error('Delete failed:', error)
+                        Swal.fire({ icon: 'error', title: 'Delete Failed', text: 'Failed to delete bill. Please try again.' })
+                    })
+            }
+        })
     }
 
     const formatAmount = (amount) => {
@@ -110,11 +118,11 @@ const BillsTable = (props) => {
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell className={classes.tableHeader}>তারিখ</TableCell>
-                        <TableCell className={classes.tableHeader}>অর্ডার আইডি</TableCell>
-                        <TableCell className={classes.tableHeader}>গ্রাহকের নাম</TableCell>
-                        <TableCell className={classes.tableHeader}>মোট টাকা</TableCell>
-                        <TableCell className={classes.tableHeader}>অ্যাকশন</TableCell>
+                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>তারিখ</TableCell>
+                        <TableCell className={classes.tableHeader} sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>অর্ডার আইডি</TableCell>
+                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>গ্রাহকের নাম</TableCell>
+                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>মোট টাকা</TableCell>
+                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>অ্যাকশন</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -124,27 +132,29 @@ const BillsTable = (props) => {
                         return (
                             <TableRow key={bill._id || 'temp-key'}>
                                 <TableCell>{moment(bill.date).format('DD/MM/YYYY, hh:mm A')}</TableCell>
-                                <TableCell>{bill._id}</TableCell>
+                                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{bill._id}</TableCell>
                                 <TableCell>{customerName}</TableCell>
                                 <TableCell>{formatAmount(bill.total)}</TableCell>
-                                <TableCell className={classes.actionCell}>
-                                    <Link to={`/bills/${bill._id}`} className={classes.viewLink}>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
+                                        <Link to={`/bills/${bill._id}`} className={classes.viewLink}>
+                                            <Button 
+                                                size='small' 
+                                                variant='contained' 
+                                                color='primary'
+                                            >
+                                                View
+                                            </Button>
+                                        </Link>
                                         <Button 
                                             size='small' 
                                             variant='contained' 
-                                            color='primary'
+                                            color='secondary'
+                                            onClick={() => handleDelete(bill._id)}
                                         >
-                                            View
+                                            Delete
                                         </Button>
-                                    </Link>
-                                    <Button 
-                                        size='small' 
-                                        variant='contained' 
-                                        color='secondary'
-                                        onClick={() => handleDelete(bill._id)}
-                                    >
-                                        Delete
-                                    </Button>
+                                    </Box>
                                 </TableCell>
                             </TableRow>
                         );

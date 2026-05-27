@@ -27,7 +27,8 @@ const LineChart = (props) => {
 
     const billDailyWise = () => {
         const dayWiseBills = []
-        const dates = getDates(moment(user.createdAt).startOf('day'), moment().endOf('day'))
+        const startDate = user?.createdAt ? moment(user.createdAt).startOf('day') : moment().subtract(30, 'days').startOf('day')
+        const dates = getDates(startDate, moment().endOf('day'))
         dates.forEach(date => {
             const dailyBill = {}
             const getBills = bills.filter(bill => moment(bill.createdAt).isSame(date, 'day'))
@@ -40,7 +41,6 @@ const LineChart = (props) => {
     const chartData = billDailyWise().map(bill => {
         return [moment(Object.keys(bill)[0]).format('Do MMM'), Object.values(bill)[0]]
     })
-    chartData.unshift()
 
     return (
         <Container>

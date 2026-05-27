@@ -1,4 +1,5 @@
 import { getData, saveData } from '../services/githubDB'
+import Swal from 'sweetalert2'
 
 export const setCustomers = (data) => {
     return {
@@ -37,7 +38,7 @@ export const asyncCustomerDetail = (id, handleChange) => {
                 handleChange(customer)
             }
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -48,7 +49,7 @@ export const asyncGetCustomers = () => {
             const data = await getData('customers.json')
             dispatch(setCustomers(data))
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -66,7 +67,7 @@ export const asyncAddCustomer = (data, reset, closeModal) => {
                 closeModal()
             }
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -80,7 +81,7 @@ export const asyncDeleteCustomer = (id) => {
             await saveData('customers.json', updated)
             dispatch(deleteCustomer(customer))
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }
@@ -95,7 +96,7 @@ export const asyncUpdateCustomer = (id, data, reset) => {
             dispatch(updateCustomer(updatedCustomer))
             reset()
         } catch (err) {
-            alert(err.message)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
     }
 }

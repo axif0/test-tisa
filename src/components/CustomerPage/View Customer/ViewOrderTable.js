@@ -1,7 +1,6 @@
 import React from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { useSelector } from 'react-redux'
 import { englishToBengali } from '../../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
@@ -13,7 +12,6 @@ const useStyle = makeStyles({
 
 const ViewOrderTable = (props) => {
     const { lineItems, total } = props
-    const products = useSelector(state => state.products)
     const classes = useStyle()
 
     return (
@@ -21,7 +19,7 @@ const ViewOrderTable = (props) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>ক্রমিক</TableCell>
+                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>ক্রমিক</TableCell>
                         <TableCell>পণ্যের নাম</TableCell>
                         <TableCell>দাম</TableCell>
                         <TableCell>পরিমাণ</TableCell>
@@ -30,12 +28,13 @@ const ViewOrderTable = (props) => {
                 </TableHead>
                 <TableBody>
                     {lineItems.map((item, index) => {
-                        if (!item || !item.product) return null;
+                        if (!item) return null;
+                        const productName = typeof item.product === 'object' ? item.product?.name : 'Unknown Product';
 
                         return (
                             <TableRow key={item._id || index}>
-                                <TableCell>{englishToBengali(index + 1)}</TableCell>
-                                <TableCell>{item.product.name}</TableCell>
+                                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{englishToBengali(index + 1)}</TableCell>
+                                <TableCell>{productName}</TableCell>
                                 <TableCell>৳{englishToBengali(item.price)}</TableCell>
                                 <TableCell>{englishToBengali(item.quantity)}</TableCell>
                                 <TableCell>৳{englishToBengali(item.subTotal)}</TableCell>

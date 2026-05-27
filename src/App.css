@@ -1,17 +1,15 @@
 
-
 .homepage {
   position: relative;
   top: 100px;
   height: 500px;
-  animation: backgroundImage 8s infinite;;
+  animation: backgroundImage 8s infinite;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
- 
-  
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
-
 
 #content{
   margin-top: 70px;
@@ -21,12 +19,11 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-start;
-
 }
 
 #credentials {
   padding: 10px;
-  border: 5px solid #27a75c;
+  border: 5px solid var(--border-color);
   margin-top: 10px;
   width: 180px;
 }
@@ -37,12 +34,13 @@
 }
 
 .homepage h1{
-  font-size: 90px;
+  font-size: clamp(1.8rem, 5vw, 5rem);
+  color: var(--brand-color);
 }
 
 .homepage h3{
-  font-size: 40px;
-  color: #3D0000;
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
+  color: var(--heading-color);
 }
 
 #content h5{
@@ -59,16 +57,17 @@
 
 .header{
   margin:0;
-  border-bottom: 2px solid #27a75c;
+  border-bottom: 2px solid var(--header-border);
   position: fixed;
   top: 0%;
   width: 100%;
-  z-index: 1px;
+  z-index: 1;
+  background-color: var(--header-bg);
 }
 
 .homepage-appbar h1{
   margin: 5px 0 0 10px;
-  color: #609966;
+  color: var(--brand-color);
 }
 
 .homepage-appbar ul li{
@@ -78,12 +77,12 @@
 
 .homepage-appbar a:hover{
   text-decoration: underline; 
-  text-decoration-color: #27a75c;
+  text-decoration-color: var(--link-color);
 }
 
 .homepage-appbar a {
   text-decoration: none;
-  color:#27a75c;
+  color: var(--link-color);
   font-weight: bold;
 }
 
@@ -106,9 +105,9 @@
 
 
 .loginPage {
-
   height: 500px;
   animation: loginBackground 1 5s linear forwards;
+  background-color: var(--bg-color);
 }
 
 @keyframes loginBackground{
@@ -134,17 +133,17 @@
   justify-content: space-around;
   flex-direction: row;
   border-radius: 5px;
-  z-index: 1;
-  background-color: red;
-  color:white;
+  z-index: 10;
+  background-color: var(--error-bg);
+  color: var(--error-text);
   font-weight: bolder;
-  animation: notification 1 0.1s linear forwards;
+  animation: notification 1 0.3s ease forwards;
 }
 .errorMessage button{
   background-color: transparent;
   border: none;
   border-radius: 50%;
-  color:white;
+  color: var(--error-text);
   font-weight: bolder;
   cursor: pointer;
 }
@@ -154,7 +153,6 @@
 
 @keyframes notification{
   from{
-
     transform: translateY(-100%);
   }
   to{
@@ -162,10 +160,11 @@
   }
 }
 
-@media only screen and (max-width: 1200px), (max-width: 600px) {
+/* Tablet */
+@media only screen and (max-width: 1200px) {
   #content{
     margin-top: 70px;
-    width: 100%;
+    width: 60%;
     height: 300px;
     padding: 20px;
   }  
@@ -178,14 +177,64 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    
   }
+
   #credentials{
     margin-top: 10px;
   }
 
   .header {
-    position: relative;
+    position: fixed;
     width: 100%;
+  }
+}
+
+/* Mobile */
+@media only screen and (max-width: 600px) {
+  #content{
+    margin-top: 40px;
+    width: 90%;
+    height: auto;
+    padding: 10px;
+  }  
+
+  .homepage {
+    position: relative;
+    top: 60px;
+    height: auto;
+    animation: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .homepage-appbar {
+    flex-wrap: wrap;
+  }
+
+  .homepage-appbar ul {
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .homepage-appbar ul li{
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+
+  #credentials{
+    margin-top: 10px;
+    width: 140px;
+  }
+
+  .header {
+    position: fixed;
+    width: 100%;
+  }
+
+  .errorMessage {
+    width: 90%;
+    right: 5%;
   }
 }

@@ -1,11 +1,12 @@
 import React from 'react'
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { englishToBengali } from '../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
     table: {
-        maxHeight: '380px'
+        maxHeight: '380px',
+        overflow: 'auto'
     },
     nameHeader: {
         width: '35%'
@@ -16,11 +17,9 @@ const useStyle = makeStyles({
         justifyContent: 'space-evenly'
     },
     tableHeader: {
-        backgroundColor: 'black',
-        color: 'white'
-    },
-    headerName: {
-        color:'white'
+        position: 'sticky',
+        top: 0,
+        zIndex: 1
     }
 })
 
@@ -33,11 +32,11 @@ const ProductTable = (props) => {
             <Table stickyHeader size='small'>
                 <TableHead>
                     <TableRow>
-                        <TableCell className={classes.tableHeader} align='center'>ক্রমিক</TableCell>
-                        <TableCell className={`${classes.nameHeader} ${classes.tableHeader}`} align='center'>নাম</TableCell>
-                        <TableCell className={classes.tableHeader} align='center'>দাম</TableCell>
-                        <TableCell className={classes.tableHeader} align='center'>View</TableCell>
-                        <TableCell className={classes.tableHeader} align='center'>Action</TableCell>
+                        <TableCell className={classes.tableHeader} align='center' sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>ক্রমিক</TableCell>
+                        <TableCell className={`${classes.nameHeader} ${classes.tableHeader}`} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>নাম</TableCell>
+                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>দাম</TableCell>
+                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>View</TableCell>
+                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>Action</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -45,7 +44,7 @@ const ProductTable = (props) => {
                         products.map((prod,index) => {
                             return (
                                 <TableRow hover key={prod._id}>
-                                    <TableCell> {englishToBengali(index + 1)} </TableCell>
+                                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}> {englishToBengali(index + 1)} </TableCell>
                                     <TableCell> {prod.name} </TableCell>
                                     <TableCell> ৳{englishToBengali(prod.price)} </TableCell>
                                     <TableCell align='center'> 
@@ -57,27 +56,29 @@ const ProductTable = (props) => {
                                             View
                                         </Button>
                                     </TableCell>
-                                    <TableCell className={classes.tableBtns}> 
-                                        <Button 
-                                            variant='contained'
-                                            color='primary'
-                                            onClick={() => {
-                                                handleUpdateProd(prod)
-                                                resetSearch()
-                                            }}
-                                        >
-                                            Update
-                                        </Button>
-                                        <Button 
-                                            variant='contained'
-                                            color='secondary'   
-                                            onClick={() => {
-                                                handleDeleteProduct(prod._id)
-                                                resetSearch()
-                                            }}
-                                        >
-                                            remove
-                                        </Button>
+                                    <TableCell> 
+                                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 1, justifyContent: 'center' }}>
+                                            <Button 
+                                                variant='contained'
+                                                color='primary'
+                                                onClick={() => {
+                                                    handleUpdateProd(prod)
+                                                    resetSearch()
+                                                }}
+                                            >
+                                                Update
+                                            </Button>
+                                            <Button 
+                                                variant='contained'
+                                                color='secondary'   
+                                                onClick={() => {
+                                                    handleDeleteProduct(prod._id)
+                                                    resetSearch()
+                                                }}
+                                            >
+                                                remove
+                                            </Button>
+                                        </Box>
                                     </TableCell>
                                 </TableRow>
                             )

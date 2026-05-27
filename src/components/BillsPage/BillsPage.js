@@ -17,7 +17,8 @@ const useStyle = makeStyles({
         marginLeft: '0',
     },
     searchField: {
-        width: '35%'
+        width: '35%',
+        minWidth: '200px'
     },
     summarySection: {
         marginTop: '20px'
@@ -85,6 +86,7 @@ const BillsPage = (props) => {
                         <Typography 
                             className={classes.title} 
                             variant='h3'
+                            sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}
                         >
                             Bills
                         </Typography>

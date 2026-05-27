@@ -9,9 +9,8 @@ import CustomerTable from './CustomerTable'
 
 const useStyle = makeStyles({
     container: {
-        width: '100vw',
+        width: '100%',
         padding: '2vh 2vw',
-        marginLeft: '50px',
         display: 'flex',
         flexDirection : 'row',
         justifyContent: 'center'
@@ -20,17 +19,16 @@ const useStyle = makeStyles({
         fontWeight: '700'
     },
     tableContainer:{
-        position: 'fixed',
-        marginTop: '175px'
+        marginTop: '20px'
     }, 
     divider:{
-        width: '90vw'
+        width: '100%'
     },
     tableContainerTitle:{
-        width: '90vw'
+        width: '100%'
     },
     searchField:{
-        width: '35%'
+        minWidth: '200px'
     }
 })
 
@@ -53,7 +51,7 @@ const CustomerPage = (props) => {
     const filterCustomers = (value) => {
         if(value.length > 0) {
             const filteredCustomer = customers.filter(ele => {
-                return ele.name.toLowerCase().includes(value.toLowerCase()) || ele.mobile.includes(value) || ele.email.toLowerCase().includes(value.toLowerCase())
+                return (ele.name || '').toLowerCase().includes(value.toLowerCase()) || (ele.mobile || '').includes(value) || (ele.email || '').toLowerCase().includes(value.toLowerCase())
             })
             setCustomerList(filteredCustomer)
         } else {
@@ -82,7 +80,7 @@ const CustomerPage = (props) => {
     return (
         <Container className={classes.container} >
             <Container disableGutters>
-                <Typography className={classes.title} variant='h3'>Customers</Typography>
+                <Typography className={classes.title} variant='h3' sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>Customers</Typography>
                 {
                     Object.keys(updateCust).length > 0 ? (
                         <EditCustomer updateCust={updateCust} resetUpdateCust={resetUpdateCust} />
@@ -110,6 +108,7 @@ const CustomerPage = (props) => {
                             value={search}
                             label='search customer by name, mobile or email' 
                             onChange={handleSearchChange}
+                            sx={{ width: { xs: '100%', sm: '35%' } }}
                         />
                     </Box>
                 <CustomerTable 

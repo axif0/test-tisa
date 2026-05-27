@@ -49,7 +49,7 @@ const AddCustomerModal = (props) => {
                   }}
             >
                 <Fade in={open}>
-                    <Paper>
+                    <Paper sx={{ width: { xs: '95%', sm: 'auto' }, maxWidth: 500, maxHeight: '90vh', overflow: 'auto' }}>
                         <Container className={classes.formContainer}>
                             <Typography className={classes.formTitle} align='center' variant='h5'>Add Customer</Typography>
                             <CustomerForm handleClose={handleClose}/>

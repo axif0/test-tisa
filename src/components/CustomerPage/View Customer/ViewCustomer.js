@@ -9,7 +9,7 @@ import { getData } from '../../../services/githubDB'
 
 const useStyle = makeStyles({
     container: {
-        width: '90vw',
+        width: '100%',
         padding: '2vh 1vw'
     },
     loading: {

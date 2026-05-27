@@ -13,7 +13,7 @@ import PrintBill from './PrintBill'
 
 const useStyle = makeStyles({
     container: {
-        width: '90vw',
+        width: '100%',
         padding: '2vh 1vw'
     },
     loadingContainer: {
@@ -120,8 +120,8 @@ const BillView = () => {
                 <BillItemtable 
                     items={billDetails.items.map(item => ({
                         ...item,
-                        product: item.product._id,
-                        name: item.product.name
+                        product: item.product?._id || item.product,
+                        name: item.product?.name || 'Unknown Product'
                     }))} 
                     total={billDetails.total} 
                 />

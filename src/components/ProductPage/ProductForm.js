@@ -60,7 +60,7 @@ const ProductForm = (props) => {
         validate()
         if(Object.keys(errors).length === 0) {
             const formData = {
-                name: name[0].toUpperCase() + name.slice(1),
+                name: name.length > 0 ? name[0].toUpperCase() + name.slice(1) : name,
                 price: convertMixedInputToNumber(price)
             }
             if(_id) {
@@ -111,7 +111,7 @@ const ProductForm = (props) => {
                     variant='contained'
                     type='submit'
                     color='primary'
-                    style={{ marginRight: '10px' }}
+                    sx={{ marginRight: '10px' }}
                 >
                     {_id ? 'Update' : 'Add'}
                 </Button>
