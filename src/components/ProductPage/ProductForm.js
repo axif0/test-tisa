@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Button, Box } from '@mui/material'
+import { TextField, Button, Box, CircularProgress } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { asyncAddProducts, asyncUpdateProducts } from '../../action/productAction'
 import { makeStyles } from '@mui/styles'
@@ -20,6 +20,7 @@ const ProductForm = (props) => {
     const [ name, setName ] = useState(prodName ? prodName : '')
     const [ price, setPrice ] = useState(englishToBengali(prodPrice ? prodPrice : ''))
     const [ formErrors, setFormErrors ] = useState({})
+    const [ loading, setLoading ] = useState(false)
     const errors = {}
     const dispatch = useDispatch()
     const classes = useStyle()
@@ -30,13 +31,11 @@ const ProductForm = (props) => {
         } else if(e.target.name === 'price') {
             const value = e.target.value;
             
-            // Allow empty input
             if (value === '') {
                 setPrice('');
                 return;
             }
 
-            // Validate mixed number input
             if (!isValidMixedNumber(value)) {
                 return;
             }
@@ -55,18 +54,23 @@ const ProductForm = (props) => {
         setFormErrors(errors)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         validate()
         if(Object.keys(errors).length === 0) {
+            setLoading(true)
             const formData = {
                 name: name.length > 0 ? name[0].toUpperCase() + name.slice(1) : name,
                 price: convertMixedInputToNumber(price)
             }
-            if(_id) {
-                dispatch(asyncUpdateProducts(_id, formData, resetUpdateProd))
-            } else {
-                dispatch(asyncAddProducts(formData, resetForm))
+            try {
+                if(_id) {
+                    await dispatch(asyncUpdateProducts(_id, formData, resetUpdateProd))
+                } else {
+                    await dispatch(asyncAddProducts(formData, resetForm))
+                }
+            } finally {
+                setLoading(false)
             }
         }
     }
@@ -95,6 +99,7 @@ const ProductForm = (props) => {
                 error={formErrors.name ? true : false}
                 helperText={formErrors.name ? formErrors.name : null}
                 required
+                disabled={loading}
             />
             <TextField
                 className={classes.input}
@@ -105,6 +110,7 @@ const ProductForm = (props) => {
                 error={formErrors.price ? true : false}
                 helperText={formErrors.price ? formErrors.price : null}
                 required
+                disabled={loading}
             />
             <Box>
                 <Button
@@ -112,13 +118,16 @@ const ProductForm = (props) => {
                     type='submit'
                     color='primary'
                     sx={{ marginRight: '10px' }}
+                    disabled={loading}
+                    startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                    {_id ? 'Update' : 'Add'}
+                    {loading ? (_id ? 'Updating...' : 'Adding...') : (_id ? 'Update' : 'Add')}
                 </Button>
                 <Button
                     variant='contained'
                     onClick={handleCancel}
                     type='button'
+                    disabled={loading}
                 >
                     বাতিল
                 </Button>

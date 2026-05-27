@@ -41,14 +41,14 @@ export const asyncGetProducts = () => {
 }
 
 export const asyncAddProducts = (data, reset) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('products.json')
+            const { products } = getState()
             const newProduct = { ...data, _id: crypto.randomUUID() }
-            const updated = [...list, newProduct]
-            await saveData('products.json', updated)
+            const updated = [...products, newProduct]
             dispatch(addProduct(newProduct))
             reset()
+            await saveData('products.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
@@ -56,14 +56,14 @@ export const asyncAddProducts = (data, reset) => {
 }
 
 export const asyncUpdateProducts = (id, data, reset) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('products.json')
+            const { products } = getState()
             const updatedProduct = { _id: id, ...data }
-            const updated = list.map(p => p._id === id ? updatedProduct : p)
-            await saveData('products.json', updated)
+            const updated = products.map(p => p._id === id ? updatedProduct : p)
             dispatch(updateProduct(updatedProduct))
             reset()
+            await saveData('products.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
@@ -71,13 +71,13 @@ export const asyncUpdateProducts = (id, data, reset) => {
 }
 
 export const asyncDeleteProducts = (id) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('products.json')
-            const product = list.find(p => p._id === id)
-            const updated = list.filter(p => p._id !== id)
-            await saveData('products.json', updated)
+            const { products } = getState()
+            const product = products.find(p => p._id === id)
+            const updated = products.filter(p => p._id !== id)
             dispatch(deleteProduct(product))
+            await saveData('products.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
@@ -85,12 +85,16 @@ export const asyncDeleteProducts = (id) => {
 }
 
 export const asyncProductDetail = (id, stateChange) => {
-    return async () => {
+    return async (dispatch, getState) => {
         try {
-            const data = await getData('products.json')
-            const product = data.find(p => p._id === id)
+            const { products } = getState()
+            const product = products.find(p => p._id === id)
             if (product) {
                 stateChange(product)
+            } else {
+                const data = await getData('products.json')
+                const found = data.find(p => p._id === id)
+                if (found) stateChange(found)
             }
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })

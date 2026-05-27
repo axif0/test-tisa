@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { Paper, Typography, Divider, Button, Container } from '@mui/material'
+import { Paper, Typography, Divider, Button, Container, CircularProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import CustomerSuggestion from './CustomerSuggestion'
 import OrderDetails from './OrderDetails'
@@ -18,11 +18,11 @@ const useStyle = makeStyles({
 
 const SummaryOfBill = (props) => {
     const classes = useStyle()
-    const { handleCustomerInfo, lineItems, customerInfo } = props
+    const { handleCustomerInfo, lineItems, customerInfo, isLoading } = props
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const handleGenerateBill = () => {
+    const handleGenerateBill = async () => {
         if (!customerInfo || !customerInfo._id || lineItems.length === 0) {
             props.onGenerateError('Please select a customer and add at least one product');
             return;
@@ -30,7 +30,6 @@ const SummaryOfBill = (props) => {
 
         props.setIsLoading(true);
 
-        // Format line items with required fields from the model
         const formattedLineItems = lineItems.map(item => ({
             product: item._id,
             quantity: item.quantity,
@@ -38,7 +37,6 @@ const SummaryOfBill = (props) => {
             subTotal: item.subTotal
         }));
 
-        // Calculate total
         const total = lineItems.reduce((sum, item) => sum + item.subTotal, 0);
 
         const billData = {
@@ -48,17 +46,15 @@ const SummaryOfBill = (props) => {
             total: total
         };
 
-        dispatch(asyncAddBill(billData, navigate))
-            .then(response => {
-                const newBill = response?.data || response;
-                props.onGenerateSuccess(newBill._id);
-            })
-            .catch(error => {
-                props.onGenerateError(error);
-            })
-            .finally(() => {
-                props.setIsLoading(false);
-            });
+        try {
+            const response = await dispatch(asyncAddBill(billData, navigate));
+            const newBill = response?.data || response;
+            props.onGenerateSuccess(newBill._id);
+        } catch (error) {
+            props.onGenerateError(error);
+        } finally {
+            props.setIsLoading(false);
+        }
     }
 
     return (
@@ -76,8 +72,10 @@ const SummaryOfBill = (props) => {
                     color='primary' 
                     fullWidth
                     onClick={handleGenerateBill}
+                    disabled={isLoading}
+                    startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                    Generate Bill
+                    {isLoading ? 'Generating...' : 'Generate Bill'}
                 </Button>
             </Container>
         </Paper>

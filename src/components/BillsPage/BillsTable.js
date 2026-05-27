@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, CircularProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { asyncDeleteBill, asyncGetBills } from '../../action/billsAction'
 import moment from 'moment'
@@ -35,33 +35,26 @@ const BillsTable = (props) => {
     const { bills, resetSearch } = props
     const customers = useSelector(state => state.customers)
     const classes = useStyle()
+    const [deletingId, setDeletingId] = useState(null)
 
     const reversedBills = Array.isArray(bills) ? [...bills].reverse() : []
 
     const getCustomerName = (customer) => {
-        // Early return if customer is null/undefined
         if (!customer) return 'Unknown Customer'
-        
-        // If customer is already an object with name, use that
         if (typeof customer === 'object' && customer.name) {
             return customer.name
         }
-
-        // If customers array is not ready yet
         if (!customers || !Array.isArray(customers)) {
             return 'Loading...'
         }
-
-        // If customer is an ID, find the customer
         const customerId = typeof customer === 'object' ? customer._id : customer
         if (!customerId) return 'Unknown Customer'
-
         const customerData = customers.find(cust => cust._id === customerId)
         return customerData?.name || 'Customer Not Found'
     }
 
-    const handleDelete = (id) => {
-        Swal.fire({
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
             title: 'Delete this bill?',
             text: 'This action cannot be undone',
             icon: 'warning',
@@ -69,19 +62,21 @@ const BillsTable = (props) => {
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                dispatch(asyncDeleteBill(id))
-                    .then(() => {
-                        dispatch(asyncGetBills())
-                        resetSearch()
-                    })
-                    .catch(error => {
-                        console.error('Delete failed:', error)
-                        Swal.fire({ icon: 'error', title: 'Delete Failed', text: 'Failed to delete bill. Please try again.' })
-                    })
-            }
         })
+        
+        if (result.isConfirmed) {
+            setDeletingId(id)
+            try {
+                await dispatch(asyncDeleteBill(id))
+                await dispatch(asyncGetBills())
+                resetSearch()
+            } catch (error) {
+                console.error('Delete failed:', error)
+                Swal.fire({ icon: 'error', title: 'Delete Failed', text: 'Failed to delete bill. Please try again.' })
+            } finally {
+                setDeletingId(null)
+            }
+        }
     }
 
     const formatAmount = (amount) => {
@@ -89,7 +84,6 @@ const BillsTable = (props) => {
         return `৳${formatLargeNumber(amount)}`;
     };
 
-    // Add validation for bills data
     if (!Array.isArray(bills) || bills.length === 0) {
         return (
             <TableContainer component={Paper} className={classes.table}>
@@ -122,8 +116,9 @@ const BillsTable = (props) => {
                     {reversedBills.map(bill => {
                         if (!bill) return null;
                         const customerName = getCustomerName(bill.customer);
+                        const isDeleting = deletingId === bill._id;
                         return (
-                            <TableRow key={bill._id || 'temp-key'}>
+                            <TableRow key={bill._id || 'temp-key'} sx={{ opacity: isDeleting ? 0.5 : 1 }}>
                                 <TableCell>{moment(bill.date).format('DD/MM/YYYY, hh:mm A')}</TableCell>
                                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{bill._id}</TableCell>
                                 <TableCell>{customerName}</TableCell>
@@ -135,6 +130,7 @@ const BillsTable = (props) => {
                                                 size='small' 
                                                 variant='contained' 
                                                 color='primary'
+                                                disabled={isDeleting}
                                             >
                                                 View
                                             </Button>
@@ -144,8 +140,10 @@ const BillsTable = (props) => {
                                             variant='contained' 
                                             color='secondary'
                                             onClick={() => handleDelete(bill._id)}
+                                            disabled={isDeleting}
+                                            startIcon={isDeleting ? <CircularProgress size={16} color="inherit" /> : null}
                                         >
-                                            Delete
+                                            {isDeleting ? 'Deleting...' : 'Delete'}
                                         </Button>
                                     </Box>
                                 </TableCell>

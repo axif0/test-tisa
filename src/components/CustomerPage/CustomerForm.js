@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, TextField, Button } from '@mui/material'
+import { Box, TextField, Button, CircularProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useDispatch } from 'react-redux'
 import { asyncAddCustomer, asyncUpdateCustomer } from '../../action/customerAction'
@@ -36,6 +36,7 @@ const CustomerForm = (props) => {
     const [ mobile, setMobile ] = useState(custMobile ? custMobile : '')
     const [ email, setEmail ] = useState(custEmail ? custEmail : '')
     const [ formErrors, setFormErrors ] = useState({})
+    const [ loading, setLoading ] = useState(false)
     const errors = {}
     const dispatch = useDispatch()
     const classes = useStyle()
@@ -75,19 +76,24 @@ const CustomerForm = (props) => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         validate()
         if(Object.keys(errors).length === 0){
+            setLoading(true)
             const formData = {
                 name: name.length > 0 ? name[0].toUpperCase() + name.slice(1) : name,
                 mobile: mobile,
                 email: email
             }
-            if(_id) {
-                dispatch(asyncUpdateCustomer(_id, formData, resetUpdateCust))
-            } else {
-                dispatch(asyncAddCustomer(formData, resetForm, handleClose))
+            try {
+                if(_id) {
+                    await dispatch(asyncUpdateCustomer(_id, formData, resetUpdateCust))
+                } else {
+                    await dispatch(asyncAddCustomer(formData, resetForm, handleClose))
+                }
+            } finally {
+                setLoading(false)
             }
         }
     }
@@ -105,6 +111,7 @@ const CustomerForm = (props) => {
                         helperText={formErrors.name ? formErrors.name : null}
                         variant='outlined'
                         margin='dense'
+                        disabled={loading}
                     />
                     <TextField 
                         className={classes.formField}
@@ -116,6 +123,7 @@ const CustomerForm = (props) => {
                         helperText={formErrors.mobile ? formErrors.mobile : null}
                         variant='outlined'
                         margin='dense'
+                        disabled={loading}
                     />
                     <TextField 
                         className={classes.formField}
@@ -127,6 +135,7 @@ const CustomerForm = (props) => {
                         helperText={formErrors.email ? formErrors.email : null}
                         variant='outlined'
                         margin='dense'
+                        disabled={loading}
                     />
                     {
                         _id ? (
@@ -135,15 +144,18 @@ const CustomerForm = (props) => {
                                     className={classes.addBtn}
                                     type='submit'
                                     variant='contained' 
-                                    color='primary' 
+                                    color='primary'
+                                    disabled={loading}
+                                    startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                                 >
-                                    update
+                                    {loading ? 'Updating...' : 'Update'}
                                 </Button>
                                 <Button
                                     className={classes.cancelBtn}
                                     variant='contained'
                                     color='secondary'
                                     onClick={resetUpdateCust}
+                                    disabled={loading}
                                 >
                                     Cancel
                                 </Button>
@@ -155,8 +167,10 @@ const CustomerForm = (props) => {
                                         type='submit' 
                                         variant='contained' 
                                         color='primary'
+                                        disabled={loading}
+                                        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                                     >
-                                        add
+                                        {loading ? 'Adding...' : 'Add'}
                                     </Button>
                                     {
                                         (name.length>0 || email.length>0 || mobile.length>0) && (
@@ -165,6 +179,7 @@ const CustomerForm = (props) => {
                                                 onClick = {resetForm} 
                                                 variant='contained' 
                                                 color='secondary'
+                                                disabled={loading}
                                             >
                                                 Cancel
                                             </Button>

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router'
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material'
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, CircularProgress } from '@mui/material'
 import { asyncDeleteCustomer } from '../../action/customerAction'
 import { makeStyles } from '@mui/styles'
 import Swal from 'sweetalert2'
@@ -38,9 +38,10 @@ const CustomerTable = (props) => {
     const { handleUpdateCustomer, customers, resetSearch } = props
     const dispatch = useDispatch()
     const classes = useStyle()
+    const [deletingId, setDeletingId] = useState(null)
 
-    const handleDelete = (id) => {
-        Swal.fire({
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
             title: 'Are you sure?',
             text: 'This customer will be removed',
             icon: 'warning',
@@ -48,12 +49,17 @@ const CustomerTable = (props) => {
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                dispatch(asyncDeleteCustomer(id))
-                resetSearch()
-            }
         })
+        
+        if (result.isConfirmed) {
+            setDeletingId(id)
+            try {
+                await dispatch(asyncDeleteCustomer(id))
+                resetSearch()
+            } finally {
+                setDeletingId(null)
+            }
+        }
     }
 
     return (
@@ -72,8 +78,9 @@ const CustomerTable = (props) => {
                 <TableBody>
                     {
                         customers.map((cust, index) => {
+                            const isDeleting = deletingId === cust._id;
                             return (
-                                <TableRow hover key={cust._id}>
+                                <TableRow hover key={cust._id} sx={{ opacity: isDeleting ? 0.5 : 1 }}>
                                     <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}> {index + 1} </TableCell>
                                     <TableCell> {cust.name} </TableCell>
                                     <TableCell> {cust.mobile} </TableCell>
@@ -83,6 +90,7 @@ const CustomerTable = (props) => {
                                             <Button
                                                 variant='contained'
                                                 color='primary'
+                                                disabled={isDeleting}
                                             >
                                                 View
                                             </Button>
@@ -97,6 +105,7 @@ const CustomerTable = (props) => {
                                                         handleUpdateCustomer(cust)
                                                         resetSearch()
                                                     }}
+                                                    disabled={isDeleting}
                                                 >
                                                     Update
                                                 </Button> 
@@ -104,8 +113,10 @@ const CustomerTable = (props) => {
                                                     variant='contained'
                                                     color='secondary'
                                                     onClick={() => handleDelete(cust._id)}
+                                                    disabled={isDeleting}
+                                                    startIcon={isDeleting ? <CircularProgress size={16} color="inherit" /> : null}
                                                 >
-                                                    Remove
+                                                    {isDeleting ? 'Removing...' : 'Remove'}
                                                 </Button> 
                                             </Box>
                                         </TableCell>

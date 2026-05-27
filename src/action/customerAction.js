@@ -30,12 +30,16 @@ export const updateCustomer = (data) => {
 }
 
 export const asyncCustomerDetail = (id, handleChange) => {
-    return async () => {
+    return async (dispatch, getState) => {
         try {
-            const data = await getData('customers.json')
-            const customer = data.find(c => c._id === id)
+            const { customers } = getState()
+            const customer = customers.find(c => c._id === id)
             if (customer) {
                 handleChange(customer)
+            } else {
+                const data = await getData('customers.json')
+                const found = data.find(c => c._id === id)
+                if (found) handleChange(found)
             }
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
@@ -55,17 +59,15 @@ export const asyncGetCustomers = () => {
 }
 
 export const asyncAddCustomer = (data, reset, closeModal) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('customers.json')
+            const { customers } = getState()
             const newCustomer = { ...data, _id: crypto.randomUUID() }
-            const updated = [...list, newCustomer]
-            await saveData('customers.json', updated)
+            const updated = [...customers, newCustomer]
             dispatch(addCustomer(newCustomer))
             reset()
-            if (closeModal) {
-                closeModal()
-            }
+            if (closeModal) closeModal()
+            await saveData('customers.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
@@ -73,13 +75,13 @@ export const asyncAddCustomer = (data, reset, closeModal) => {
 }
 
 export const asyncDeleteCustomer = (id) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('customers.json')
-            const customer = list.find(c => c._id === id)
-            const updated = list.filter(c => c._id !== id)
-            await saveData('customers.json', updated)
+            const { customers } = getState()
+            const customer = customers.find(c => c._id === id)
+            const updated = customers.filter(c => c._id !== id)
             dispatch(deleteCustomer(customer))
+            await saveData('customers.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
@@ -87,14 +89,14 @@ export const asyncDeleteCustomer = (id) => {
 }
 
 export const asyncUpdateCustomer = (id, data, reset) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('customers.json')
+            const { customers } = getState()
             const updatedCustomer = { _id: id, ...data }
-            const updated = list.map(c => c._id === id ? updatedCustomer : c)
-            await saveData('customers.json', updated)
+            const updated = customers.map(c => c._id === id ? updatedCustomer : c)
             dispatch(updateCustomer(updatedCustomer))
             reset()
+            await saveData('customers.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }

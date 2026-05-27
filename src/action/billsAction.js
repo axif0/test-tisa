@@ -34,11 +34,9 @@ export const asyncGetBills = () => {
 }
 
 export const asyncAddBill = (data) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('bills.json')
-            const customers = await getData('customers.json')
-            const products = await getData('products.json')
+            const { customers, products, bills } = getState()
 
             const customer = customers.find(c => c._id === data.customer)
             if (!customer) throw new Error('Customer not found')
@@ -63,8 +61,8 @@ export const asyncAddBill = (data) => {
                 createdAt: new Date().toISOString()
             }
 
-            await saveData('bills.json', [...list, newBill])
             dispatch(addBill(newBill))
+            await saveData('bills.json', [...bills, newBill])
             return { data: newBill }
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Bill Error', text: err.message })
@@ -74,13 +72,14 @@ export const asyncAddBill = (data) => {
 }
 
 export const asyncDeleteBill = (id) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const list = await getData('bills.json')
-            const bill = list.find(b => b._id === id)
+            const { bills } = getState()
+            const bill = bills.find(b => b._id === id)
             if (!bill) throw new Error('Bill not found')
-            await saveData('bills.json', list.filter(b => b._id !== id))
+            const updated = bills.filter(b => b._id !== id)
             dispatch(deleteBill(bill))
+            await saveData('bills.json', updated)
             return bill
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Delete Error', text: err.message })
@@ -90,14 +89,18 @@ export const asyncDeleteBill = (id) => {
 }
 
 export const asyncGetBillDetail = (id, handleChange) => {
-    return async () => {
+    return async (dispatch, getState) => {
         try {
-            const data = await getData('bills.json')
-            const bill = data.find(b => b._id === id)
+            const { bills } = getState()
+            const bill = bills.find(b => b._id === id)
             if (bill) {
                 handleChange(bill)
+                return bill
             }
-            return bill
+            const data = await getData('bills.json')
+            const found = data.find(b => b._id === id)
+            if (found) handleChange(found)
+            return found
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
             throw err
