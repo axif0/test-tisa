@@ -28,11 +28,9 @@ export const asyncLogin = (data, navigate, notify) => {
                 dispatch(setLogin())
                 navigate('/dashboard')
             } else {
-                const notifyError = { error: true, errorMessage: 'Invalid email or password' }
-                notify(notifyError)
+                notify({ error: true, errorMessage: 'Invalid email or password' })
             }
         } catch (err) {
-            console.error(err)
             Swal.fire({ icon: 'error', title: 'Login Failed', text: err.message })
         }
     }

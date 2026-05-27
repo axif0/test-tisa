@@ -30,7 +30,7 @@ export const updateCustomer = (data) => {
 }
 
 export const asyncCustomerDetail = (id, handleChange) => {
-    return async (dispatch) => {
+    return async () => {
         try {
             const data = await getData('customers.json')
             const customer = data.find(c => c._id === id)
@@ -58,7 +58,7 @@ export const asyncAddCustomer = (data, reset, closeModal) => {
     return async (dispatch) => {
         try {
             const list = await getData('customers.json')
-            const newCustomer = { ...data, _id: Date.now().toString() }
+            const newCustomer = { ...data, _id: crypto.randomUUID() }
             const updated = [...list, newCustomer]
             await saveData('customers.json', updated)
             dispatch(addCustomer(newCustomer))

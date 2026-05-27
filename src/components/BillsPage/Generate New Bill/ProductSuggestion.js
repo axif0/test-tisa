@@ -13,16 +13,19 @@ const useStyle = makeStyles({
 
 const ProductSuggestion = (props) => {
     const { handleAddLineItem } = props
-    const [ value, setValue ] = useState({})
+    const [ value, setValue ] = useState(null)
     const [ inputValue, setInputValue ] = useState('')
     const products = useSelector(state => state.products)
     const classes = useStyle()
 
     const handleValueChange = (e, newValue) => {
-        setValue(newValue)
-        const productData = {...newValue, quantity: 1}
-        productData.subTotal = productData.quantity * productData.price
-        if(newValue) {
+        if (newValue) {
+            setValue(newValue)
+            const productData = {
+                ...newValue,
+                quantity: 1,
+                subTotal: newValue.price
+            }
             handleAddLineItem(productData)
             resetSuggestion()
         }
@@ -49,7 +52,7 @@ const ProductSuggestion = (props) => {
                 inputValue={inputValue}
                 onInputChange={handleInputChange}
                 options={products}
-                getOptionLabel={option => Object.keys(option).length>0 ? `${option.name} - ${formatPrice(option.price)}` : ''}
+                getOptionLabel={option => option?.name ? `${option.name} - ${formatPrice(option.price)}` : ''}
                 renderInput={(params) => (
                     <TextField 
                         {...params} 

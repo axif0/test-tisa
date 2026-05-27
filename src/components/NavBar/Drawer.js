@@ -95,11 +95,6 @@ const Drawer = (props) => {
 
     const menuItems = [
         {
-            name: 'User Profile',
-            icon: <AccountCircleIcon fontSize='large' />,
-            link: '/user'
-        },
-        {
             name: 'Dashboard',
             icon: <BarChartIcon fontSize='large' />,
             link: '/dashboard'

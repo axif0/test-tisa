@@ -5,7 +5,6 @@ import { englishToBengali } from '../../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
     tableHeaderFooter: {
-        color: 'black',
         fontWeight: 600
     }
 })

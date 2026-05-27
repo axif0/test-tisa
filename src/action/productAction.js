@@ -44,7 +44,7 @@ export const asyncAddProducts = (data, reset) => {
     return async (dispatch) => {
         try {
             const list = await getData('products.json')
-            const newProduct = { ...data, _id: Date.now().toString() }
+            const newProduct = { ...data, _id: crypto.randomUUID() }
             const updated = [...list, newProduct]
             await saveData('products.json', updated)
             dispatch(addProduct(newProduct))
@@ -85,7 +85,7 @@ export const asyncDeleteProducts = (id) => {
 }
 
 export const asyncProductDetail = (id, stateChange) => {
-    return async (dispatch) => {
+    return async () => {
         try {
             const data = await getData('products.json')
             const product = data.find(p => p._id === id)

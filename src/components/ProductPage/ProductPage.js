@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Container, Divider, Grid, TextField, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { asyncDeleteProducts } from '../../action/productAction'
+import { asyncDeleteProducts, asyncGetProducts } from '../../action/productAction'
 import AddProduct from './AddProduct'
 import EditProduct from './EditProduct'
 import ProductDetails from './ProductDetails'
@@ -34,6 +34,10 @@ const ProductPage = (props) => {
     const [ search, setSearch ] = useState('')
     const [ productList, setProductList ] = useState(products)
 
+
+    useEffect(() => {
+        dispatch(asyncGetProducts())
+    }, [dispatch])
 
     useEffect(() => {
         setProductList(products)

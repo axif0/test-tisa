@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles'
 import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { englishToBengali, bengaliToEnglish, formatLargeNumber, isValidMixedNumber, convertMixedInputToNumber, formatNumber } from '../../../utils/bengaliNumerals'
+import { englishToBengali, isValidMixedNumber, convertMixedInputToNumber, formatNumber } from '../../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
     tableHeaderFooter: {

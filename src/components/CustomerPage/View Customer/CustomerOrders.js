@@ -61,7 +61,7 @@ const CustomerOrders = (props) => {
                                 Order ID - {bill._id}
                             </Typography>
                             <Typography variant='h6'>
-                                Total - Rs.{bill.total}
+                                Total - ৳{bill.total}
                             </Typography>
                         </Box>
                     </AccordionSummary>

@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { asyncDeleteBill, asyncGetBills } from '../../action/billsAction'
-import { asyncGetCustomers } from '../../action/customerAction'
 import moment from 'moment'
 import Swal from 'sweetalert2'
-import { englishToBengali, formatLargeNumber } from '../../utils/bengaliNumerals'
+import { formatLargeNumber } from '../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
     table: {
@@ -37,12 +36,6 @@ const BillsTable = (props) => {
     const customers = useSelector(state => state.customers)
     const classes = useStyle()
 
-    // Load customers when component mounts
-    useEffect(() => {
-        dispatch(asyncGetCustomers())
-    }, [dispatch])
-
-    // Create a safe copy of bills array before reversing
     const reversedBills = Array.isArray(bills) ? [...bills].reverse() : []
 
     const getCustomerName = (customer) => {

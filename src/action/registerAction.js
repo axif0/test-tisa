@@ -15,7 +15,7 @@ export const asyncRegister = (data, changeTab, notify) => {
             }
             const hashedPw = await hashPassword(data.password)
             const newUser = {
-                _id: Date.now().toString(),
+                _id: crypto.randomUUID(),
                 username: data.username,
                 email: data.email,
                 password: hashedPw,
@@ -24,8 +24,6 @@ export const asyncRegister = (data, changeTab, notify) => {
                 createdAt: new Date().toISOString()
             }
             await saveData('users.json', [...users, newUser])
-            const { password, ...userWithoutPassword } = newUser
-            localStorage.setItem('tishaUser', JSON.stringify(userWithoutPassword))
             changeTab('login')
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Registration Failed', text: err.message })

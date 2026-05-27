@@ -31,7 +31,7 @@ const StatsContainer = (props) => {
     const classes = useStyle()
 
     const todayBills = Array.isArray(bills) ? bills.filter(bill => 
-        moment(bill.createdAt).isBetween(moment().startOf('days'), moment())
+        moment(bill.createdAt).isBetween(moment().startOf('days'), moment(), null, '[]')
     ) : []
 
     const calculateTotal = (data) => {

@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
-import { Container, IconButton, Typography, Box, Tooltip, Link, CircularProgress } from '@mui/material'
+import { useParams, Link } from 'react-router-dom'
+import { Container, IconButton, Typography, Box, Tooltip, CircularProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useDispatch } from 'react-redux'
 import { asyncGetBillDetail } from '../../../action/billsAction'
-import { asyncGetCustomers } from '../../../action/customerAction'
-import { asyncGetProducts } from '../../../action/productAction'
 import BillDetail from './BillDetail'
 import BillItemtable from './BillItemTable'
 import PrintBill from './PrintBill'
@@ -48,7 +46,6 @@ const BillView = () => {
             try {
                 await dispatch(asyncGetBillDetail(id, handleBillDetails))
             } catch (err) {
-                console.error('Error fetching bill:', err)
                 setError(err.message || 'Failed to load bill details')
                 setIsLoading(false)
             }

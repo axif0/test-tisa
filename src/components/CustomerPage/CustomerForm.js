@@ -44,10 +44,9 @@ const CustomerForm = (props) => {
         if(e.target.name==='name') {
             setName(e.target.value)
         } else if(e.target.name==='mobile') {
-            if(Number(e.target.value) || e.target.value==='') {
-                if(e.target.value.length <= 10) {
-                    setMobile(e.target.value)
-                }
+            const val = e.target.value
+            if(val === '' || /^\d{0,10}$/.test(val)) {
+                setMobile(val)
             }
         } else if(e.target.name==='email') {
             setEmail(e.target.value.split(' ').join(''))

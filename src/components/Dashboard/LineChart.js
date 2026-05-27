@@ -10,9 +10,10 @@ const LineChart = (props) => {
 
     const getDates = (start, end) => {
         const dates = []
-        while (start.isSameOrBefore(end)){
-            dates.push(start.toString())
-            start.add(1,'days').endOf('day')
+        const current = start.clone()
+        while (current.isSameOrBefore(end)){
+            dates.push(current.toString())
+            current.add(1,'days').endOf('day')
         }
         return dates
     } 
@@ -53,7 +54,7 @@ const LineChart = (props) => {
                 options={{
                     chart: {
                       title: 'Amount received on Daily basis',
-                      subtitle: 'in INR',
+                      subtitle: 'in BDT (৳)',
                     },
                     vAxis: {
                         title: 'Amount received'

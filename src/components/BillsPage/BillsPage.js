@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Container, Typography, Box, TextField, Grid } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useSelector, useDispatch } from 'react-redux'
-import { asyncGetCustomers } from '../../action/customerAction'
 import { asyncGetBills } from '../../action/billsAction'
 import BillsTable from './BillsTable'
 import SummarySection from './SummarySection'
@@ -28,48 +27,35 @@ const useStyle = makeStyles({
     }
 })
 
-const BillsPage = (props) => {
-    const bills = useSelector(state => state.bills) || []
+const BillsPage = () => {
+    const rawBills = useSelector(state => state.bills)
+    const bills = useMemo(() => Array.isArray(rawBills) ? rawBills : [], [rawBills])
     const classes = useStyle()
     const dispatch = useDispatch()
     const [ search, setSearch ] = useState('')
     const [ allBills, setAllBills ] = useState([])
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                await Promise.all([
-                    dispatch(asyncGetBills()),
-                    dispatch(asyncGetCustomers())
-                ])
-            } catch (error) {
-                console.error('Error loading data:', error)
-            }
-        }
-        loadData()
+        dispatch(asyncGetBills())
     }, [dispatch])
 
     useEffect(() => {
-        // Update allBills when bills change
         setAllBills(Array.isArray(bills) ? bills : [])
     }, [bills])
 
     const handleSearch = (e) => {
-        setSearch(e.target.value)
-        const filteredBill = searchBill(e.target.value)
-        setAllBills(filteredBill)
-    }
-
-    const searchBill = (id) => {
-        if (!Array.isArray(bills)) return []
-        if (id.length > 0) {
-            return bills.filter(bill => bill._id.includes(id))
+        const val = e.target.value
+        setSearch(val)
+        if (val.length > 0) {
+            setAllBills(bills.filter(bill => bill._id.includes(val)))
+        } else {
+            setAllBills(bills)
         }
-        return bills
     }
 
     const resetSearch = () => {
         setSearch('')
+        setAllBills(bills)
     }
 
     return (
@@ -82,6 +68,8 @@ const BillsPage = (props) => {
                         justifyContent='space-between'
                         alignItems='center'
                         mb={2}
+                        flexWrap='wrap'
+                        gap={1}
                     >
                         <Typography 
                             className={classes.title} 
@@ -109,4 +97,4 @@ const BillsPage = (props) => {
     )
 }
 
-export default BillsPage 
+export default BillsPage

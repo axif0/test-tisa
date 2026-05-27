@@ -18,7 +18,6 @@ const cache = {};
 const debounceTimers = {};
 const pendingWrites = {};
 const writeQueues = {};
-const writeResolvers = {};
 
 function encodeContent(dataArray) {
   return btoa(unescape(encodeURIComponent(JSON.stringify(dataArray, null, 2))));

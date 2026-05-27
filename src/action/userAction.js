@@ -13,7 +13,8 @@ export const asyncGetUser = () => {
                 dispatch(setUser(user))
             }
         } catch (err) {
-            console.error('Failed to get user:', err)
+            // Silently handle corrupted localStorage data
+            localStorage.removeItem('tishaUser')
         }
     }
 }

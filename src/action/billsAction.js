@@ -33,30 +33,33 @@ export const asyncGetBills = () => {
     }
 }
 
-export const asyncAddBill = (data, navigate) => {
+export const asyncAddBill = (data) => {
     return async (dispatch) => {
         try {
             const list = await getData('bills.json')
             const customers = await getData('customers.json')
             const products = await getData('products.json')
 
-            const customer = customers.find(c => c._id === data.customer) || {}
+            const customer = customers.find(c => c._id === data.customer)
+            if (!customer) throw new Error('Customer not found')
+
             const items = data.items.map(item => {
-                const product = products.find(p => p._id === item.product) || {}
+                const product = products.find(p => p._id === item.product)
+                if (!product) throw new Error('Product not found')
                 return {
                     product: { _id: product._id, name: product.name, price: product.price },
                     quantity: item.quantity,
                     price: item.price,
-                    subTotal: item.subTotal
+                    subTotal: Math.round(item.subTotal * 100) / 100
                 }
             })
 
             const newBill = {
-                _id: Date.now().toString(),
+                _id: crypto.randomUUID(),
                 date: data.date,
                 customer: { _id: customer._id, name: customer.name, email: customer.email, mobile: customer.mobile, address: customer.address },
                 items,
-                total: data.total,
+                total: Math.round(data.total * 100) / 100,
                 createdAt: new Date().toISOString()
             }
 
@@ -64,7 +67,7 @@ export const asyncAddBill = (data, navigate) => {
             dispatch(addBill(newBill))
             return { data: newBill }
         } catch (err) {
-            console.error('Bill generation error:', err)
+            Swal.fire({ icon: 'error', title: 'Bill Error', text: err.message })
             throw err
         }
     }
@@ -75,21 +78,19 @@ export const asyncDeleteBill = (id) => {
         try {
             const list = await getData('bills.json')
             const bill = list.find(b => b._id === id)
-            if (!bill) {
-                throw new Error('Bill not found')
-            }
+            if (!bill) throw new Error('Bill not found')
             await saveData('bills.json', list.filter(b => b._id !== id))
             dispatch(deleteBill(bill))
             return bill
         } catch (err) {
-            console.error('Delete bill error:', err)
+            Swal.fire({ icon: 'error', title: 'Delete Error', text: err.message })
             throw err
         }
     }
 }
 
 export const asyncGetBillDetail = (id, handleChange) => {
-    return async (dispatch) => {
+    return async () => {
         try {
             const data = await getData('bills.json')
             const bill = data.find(b => b._id === id)
@@ -98,7 +99,7 @@ export const asyncGetBillDetail = (id, handleChange) => {
             }
             return bill
         } catch (err) {
-            console.error('Failed to fetch bill details:', err)
+            Swal.fire({ icon: 'error', title: 'Error', text: err.message })
             throw err
         }
     }
