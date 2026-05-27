@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles'
 import { useDispatch } from 'react-redux'
 import { asyncDeleteProducts } from '../../action/productAction'
 import moment from 'moment'
-import axios from 'axios'
+import { getData } from '../../services/githubDB'
 import { englishToBengali } from '../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
@@ -46,7 +46,7 @@ const useStyle = makeStyles({
 })
 
 const ProductDetails = (props) => {
-    const { productId, resetViewProduct } = props
+    const { productId, resetViewProduct, handleUpdateProd } = props
     const classes = useStyle()
     const [productData, setProductData] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
@@ -58,17 +58,46 @@ const ProductDetails = (props) => {
             if (!productId) return
             setIsLoading(true)
             try {
-                const token = localStorage.getItem('token')
-                const response = await axios.get(`https://tisha-dashboard-api.onrender.com//api/products/${productId}/bills`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
+                const [products, bills] = await Promise.all([
+                    getData('products.json'),
+                    getData('bills.json')
+                ])
+
+                const product = products.find(p => p._id === productId)
+                if (!product) {
+                    throw new Error('Product not found')
+                }
+
+                const productBills = bills.filter(bill => {
+                    if (!bill.items || !Array.isArray(bill.items)) return false
+                    return bill.items.some(item => {
+                        const itemProductId = item.product?._id || item.product
+                        return itemProductId === productId
+                    })
+                }).map(bill => {
+                    const relevantItems = bill.items.filter(item => {
+                        const itemProductId = item.product?._id || item.product
+                        return itemProductId === productId
+                    })
+                    return { ...bill, items: relevantItems }
                 })
-                setProductData(response.data)
+
+                const totalOrders = productBills.length
+                const totalQuantity = productBills.reduce((sum, bill) => {
+                    return sum + bill.items.reduce((itemSum, item) => itemSum + (item.quantity || 0), 0)
+                }, 0)
+                const totalAmount = productBills.reduce((sum, bill) => {
+                    return sum + bill.items.reduce((itemSum, item) => itemSum + (item.subTotal || 0), 0)
+                }, 0)
+
+                setProductData({
+                    product,
+                    stats: { totalOrders, totalQuantity, totalAmount },
+                    bills: productBills
+                })
             } catch (err) {
                 console.error('Error fetching product data:', err)
-                setError(err.response?.data?.message || 'Could not fetch product data')
+                setError(err.message || 'Could not fetch product data')
             } finally {
                 setIsLoading(false)
             }
@@ -119,7 +148,6 @@ const ProductDetails = (props) => {
         <Paper className={classes.container}>
             <Typography className={classes.detailsTitle} variant='h5'>Product Details</Typography>
             
-            {/* Basic Info */}
             <Box className={classes.content}>
                 <Typography variant='h6'>নাম: {productData?.product?.name}</Typography>
                 <Typography variant='h6'>দাম: ৳{englishToBengali(productData?.product?.price)}</Typography>
@@ -130,7 +158,6 @@ const ProductDetails = (props) => {
                 </Typography>
             </Box>
 
-            {/* Stats */}
             <Box className={classes.statsContainer}>
                 <Paper className={classes.statsBox}>
                     <Typography variant='h6' align='center'>মোট অর্ডার</Typography>
@@ -152,7 +179,6 @@ const ProductDetails = (props) => {
                 </Paper>
             </Box>
 
-            {/* Orders List */}
             <Box className={classes.ordersList}>
                 <Typography variant='h6'>Order History</Typography>
                 {productData?.bills?.length > 0 ? (
@@ -196,7 +222,6 @@ const ProductDetails = (props) => {
                 )}
             </Box>
 
-            {/* Actions */}
             <Box display='flex' justifyContent='space-around' mt={3}>
                 <Button
                     variant='contained'

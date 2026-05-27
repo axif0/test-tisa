@@ -1,6 +1,4 @@
-import axios from 'axios'
-
-const url = 'https://tisha-dashboard-api.onrender.com/api/bills'
+import { getData, saveData } from '../services/githubDB'
 
 export const setBills = (data) => {
     return {
@@ -24,89 +22,80 @@ export const deleteBill = (data) => {
 }
 
 export const asyncGetBills = () => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+    return async (dispatch) => {
+        try {
+            const data = await getData('bills.json')
+            dispatch(setBills(data))
+        } catch (err) {
+            alert(err.message)
         }
-        axios.get(url, config)
-            .then(response => {
-                const data = response.data
-                dispatch(setBills(data))
-            })
-            .catch(err => alert(err.message))
     }
 }
 
 export const asyncAddBill = (data, navigate) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
+    return async (dispatch) => {
+        try {
+            const list = await getData('bills.json')
+            const customers = await getData('customers.json')
+            const products = await getData('products.json')
+
+            const customer = customers.find(c => c._id === data.customer) || {}
+            const items = data.items.map(item => {
+                const product = products.find(p => p._id === item.product) || {}
+                return {
+                    product: { _id: product._id, name: product.name, price: product.price },
+                    quantity: item.quantity,
+                    price: item.price,
+                    subTotal: item.subTotal
+                }
+            })
+
+            const newBill = {
+                _id: Date.now().toString(),
+                date: data.date,
+                customer: { _id: customer._id, name: customer.name, email: customer.email, mobile: customer.mobile, address: customer.address },
+                items,
+                total: data.total,
+                createdAt: new Date().toISOString()
             }
+
+            await saveData('bills.json', [...list, newBill])
+            dispatch(addBill(newBill))
+            return { data: newBill }
+        } catch (err) {
+            console.error('Bill generation error:', err)
+            throw err
         }
-        
-        return new Promise((resolve, reject) => {
-            axios.post(url, data, config)
-                .then(response => {
-                    const responseData = response.data
-                    dispatch(addBill(responseData))
-                    resolve(response)
-                })
-                .catch(err => {
-                    console.error('Bill generation error:', err);
-                    reject(err)
-                })
-        })
     }
 }
 
 export const asyncDeleteBill = (id) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+    return async (dispatch) => {
+        try {
+            const list = await getData('bills.json')
+            const bill = list.find(b => b._id === id)
+            await saveData('bills.json', list.filter(b => b._id !== id))
+            dispatch(deleteBill(bill))
+            return bill
+        } catch (err) {
+            console.error('Delete bill error:', err)
+            throw err
         }
-        
-        return new Promise((resolve, reject) => {
-            axios.delete(`${url}/${id}`, config)
-                .then(response => {
-                    const data = response.data
-                    dispatch(deleteBill(data))
-                    resolve(data)
-                })
-                .catch(err => {
-                    console.error('Delete bill error:', err)
-                    reject(err)
-                })
-        })
     }
 }
 
 export const asyncGetBillDetail = (id, handleChange) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
+    return async (dispatch) => {
+        try {
+            const data = await getData('bills.json')
+            const bill = data.find(b => b._id === id)
+            if (bill) {
+                handleChange(bill)
             }
+            return bill
+        } catch (err) {
+            console.error('Failed to fetch bill details:', err)
+            throw err
         }
-        return new Promise((resolve, reject) => {
-            axios.get(`${url}/${id}`, config)
-                .then(response => {
-                    const data = response.data
-                    handleChange(data)
-                    resolve(data)
-                })
-                .catch(err => {
-                    console.error('Failed to fetch bill details:', err)
-                    reject(err)
-                })
-        })
     }
 }

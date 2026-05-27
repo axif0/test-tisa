@@ -60,7 +60,7 @@ const Drawer = (props) => {
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('token')
+        localStorage.removeItem('tishaUser')
         dispatch(setLogout())
     }
 

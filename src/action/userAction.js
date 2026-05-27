@@ -1,4 +1,3 @@
-import axios from 'axios'
 export const setUser = (data) => {
     return {
         type: 'SET_USER',
@@ -8,17 +7,13 @@ export const setUser = (data) => {
 
 export const asyncGetUser = () => {
     return (dispatch) => {
-        const url = 'https://tisha-dashboard-api.onrender.com/api/users/account'
-        const token = localStorage.getItem('token')
-        axios.get(url, {
-            headers:{
-                Authorization : `Bearer ${token}`
+        try {
+            const user = JSON.parse(localStorage.getItem('tishaUser'))
+            if (user) {
+                dispatch(setUser(user))
             }
-        })
-            .then(response => {
-                const data = response.data
-                dispatch(setUser(data))
-            })
-            .catch(err => alert(err.message))
+        } catch (err) {
+            console.error('Failed to get user:', err)
+        }
     }
 }

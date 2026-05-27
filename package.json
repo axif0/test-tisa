@@ -35,9 +35,7 @@
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "cd backend && npm run dev",
-    "dev": "concurrently \"npm run server\" \"export NODE_OPTIONS=--openssl-legacy-provider && npm start\""
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -58,8 +56,6 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "cross-env": "^7.0.3",
-    "nodemon": "^3.1.0"
+    "cross-env": "^7.0.3"
   }
 }

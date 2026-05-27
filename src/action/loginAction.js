@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { getData, saveData } from '../services/githubDB'
 
 export const setLogin = () => {
     return {
@@ -14,25 +14,31 @@ export const setLogout = () => {
     }
 }
 
+async function hashPassword(password) {
+    const msgBuffer = new TextEncoder().encode(password)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
 export const asyncLogin = (data, history, notify) => {
-    return (dispatch) => {
-        const url = 'https://tisha-dashboard-api.onrender.com/api/users/login'
-        axios.post(url, data)
-            .then(response => {
-                const data = response.data
-                if(data.token){
-                    console.log(response.data)
-                    localStorage.setItem('token', data.token)
-                    dispatch(setLogin())
-                    history.push('/dashboard')
-                } else if(data.errors) {
-                    const notifyError = {error: true, errorMessage: data.errors}
-                    notify(notifyError)
-                }
-            })
-            .catch(err => {
-                console.log(err)
-                alert(`${err.message}-${err.statusCode}`)
-            })
+    return async (dispatch) => {
+        try {
+            const users = await getData('users.json')
+            const hashedPw = await hashPassword(data.password)
+            const user = users.find(u => u.email === data.email && u.password === hashedPw)
+            if (user) {
+                const { password, ...userWithoutPassword } = user
+                localStorage.setItem('tishaUser', JSON.stringify(userWithoutPassword))
+                dispatch(setLogin())
+                history.push('/dashboard')
+            } else {
+                const notifyError = { error: true, errorMessage: 'Invalid email or password' }
+                notify(notifyError)
+            }
+        } catch (err) {
+            console.log(err)
+            alert(err.message)
+        }
     }
 }

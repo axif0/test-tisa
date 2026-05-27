@@ -4,9 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import validator from 'validator'
 import { makeStyles } from '@mui/styles'
-import axiosInstance from '../../config/axios'
-import { setLogin } from '../../action/loginAction'
-import { API_BASE_URL } from '../../config/api'
+import { asyncLogin } from '../../action/loginAction'
 
 const useStyle = makeStyles({
     formElements: {
@@ -51,18 +49,7 @@ const LoginForm = (props) => {
                 email: email,
                 password: password
             }
-            axiosInstance.post(`${API_BASE_URL}/users/login`, formData)
-                .then((response) => {
-                    localStorage.setItem('token', response.data.token)
-                    dispatch(setLogin())
-                    navigate('/dashboard')
-                })
-                .catch((err) => {
-                    props.handleErrorNotify({
-                        error: true,
-                        errorMessage: err.response?.data?.message || 'Login failed'
-                    })
-                })
+            dispatch(asyncLogin(formData, navigate, props.handleErrorNotify))
         }
     }
 

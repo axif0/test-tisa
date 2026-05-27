@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Box, Grid, TextField, Typography, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import validator from 'validator'
-import axiosInstance from '../../config/axios'
-import { API_BASE_URL } from '../../config/api'
+import { useDispatch } from 'react-redux'
+import { asyncRegister } from '../../action/registerAction'
 
 const useStyle = makeStyles({
     formElements: {
@@ -20,6 +20,7 @@ const RegisterForm = (props) => {
     const [ formErrors, setFormErrors ] = useState({})
     const errors = {}
     const classes = useStyle()
+    const dispatch = useDispatch()
 
     const handleChange = (e) => {
         if(e.target.name==='username') {
@@ -76,16 +77,9 @@ const RegisterForm = (props) => {
                 address: address
             }
             
-            axiosInstance.post(`${API_BASE_URL}/users/register`, formData)
-                .then((response) => {
-                    console.log('Registration successful:', response.data)
-                    resetForm()
-                    props.handleChangeTabValue()
-                })
-                .catch((err) => {
-                    console.error('Registration error:', err.response?.data || err.message)
-                    setFormErrors({ submit: err.response?.data?.message || 'Registration failed' })
-                })
+            dispatch(asyncRegister(formData, props.handleChangeTabValue, (err) => {
+                setFormErrors({ submit: err.errorMessage })
+            }))
         }
     }
 

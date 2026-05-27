@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Container, IconButton, CircularProgress, Box, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import { useDispatch } from 'react-redux'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Link, useParams } from 'react-router-dom'
 import CustomerStats from './CustomerStats'
 import CustomerOrders from './CustomerOrders'
-import axios from 'axios'
+import { getData } from '../../../services/githubDB'
 
 const useStyle = makeStyles({
     container: {
@@ -32,22 +31,35 @@ const ViewCustomer = () => {
         const fetchCustomerData = async () => {
             setIsLoading(true)
             try {
-                const token = localStorage.getItem('token')
-                if (!token) {
-                    throw new Error('No authentication token found')
+                const [customers, bills] = await Promise.all([
+                    getData('customers.json'),
+                    getData('bills.json')
+                ])
+
+                const customer = customers.find(c => c._id === id)
+                if (!customer) {
+                    throw new Error('Customer not found')
                 }
 
-                const response = await axios.get(`https://tisha-dashboard-api.onrender.com//api/customers/${id}/bills`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
+                const customerBills = bills.filter(b => {
+                    if (!b.customer) return false
+                    const customerId = typeof b.customer === 'object' ? b.customer._id : b.customer
+                    return customerId === id
                 })
 
-                setCustomerData(response.data)
+                const totalAmount = customerBills.reduce((sum, bill) => sum + (Number(bill.total) || 0), 0)
+
+                setCustomerData({
+                    customer,
+                    stats: {
+                        totalOrders: customerBills.length,
+                        totalAmount
+                    },
+                    bills: customerBills
+                })
             } catch (err) {
-                console.error('Error details:', err.response || err)
-                setError(err.response?.data?.message || 'Could not fetch customer data')
+                console.error('Error fetching customer data:', err)
+                setError(err.message || 'Could not fetch customer data')
             } finally {
                 setIsLoading(false)
             }

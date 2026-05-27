@@ -23,11 +23,11 @@ const NavBar = (props) => {
     const location = useLocation()
 
     useEffect(() => {
-        if (localStorage.getItem('token') && 
+        if (localStorage.getItem('tishaUser') && 
             (location.pathname === '/' || location.pathname === '/login-or-register')) {
             dispatch(setLogin())
             navigate('/dashboard')
-        } else if (localStorage.getItem('token')) {
+        } else if (localStorage.getItem('tishaUser')) {
             dispatch(setLogin())
         }
     }, [dispatch, navigate, location.pathname])

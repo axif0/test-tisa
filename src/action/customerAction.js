@@ -1,6 +1,4 @@
-import axios from 'axios'
-
-const url = 'https://tisha-dashboard-api.onrender.com/api/customers'
+import { getData, saveData } from '../services/githubDB'
 
 export const setCustomers = (data) => {
     return {
@@ -31,91 +29,73 @@ export const updateCustomer = (data) => {
 }
 
 export const asyncCustomerDetail = (id, handleChange) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
+    return async (dispatch) => {
+        try {
+            const data = await getData('customers.json')
+            const customer = data.find(c => c._id === id)
+            if (customer) {
+                handleChange(customer)
             }
+        } catch (err) {
+            alert(err.message)
         }
-        axios.get(`${url}/${id}`, config)
-            .then(response => {
-                const data = response.data
-                handleChange(data)
-            })
-            .catch(err => alert(err.message))
     }
 }
 
 export const asyncGetCustomers = () => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+    return async (dispatch) => {
+        try {
+            const data = await getData('customers.json')
+            dispatch(setCustomers(data))
+        } catch (err) {
+            alert(err.message)
         }
-        axios.get(url, config)
-            .then(response => {
-                const data = response.data
-                dispatch(setCustomers(data))
-            })
-            .catch(err => alert(err.message))
     }
 }
 
 export const asyncAddCustomer = (data, reset, closeModal) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
+    return async (dispatch) => {
+        try {
+            const list = await getData('customers.json')
+            const newCustomer = { ...data, _id: Date.now().toString() }
+            const updated = [...list, newCustomer]
+            await saveData('customers.json', updated)
+            dispatch(addCustomer(newCustomer))
+            reset()
+            if (closeModal) {
+                closeModal()
             }
+        } catch (err) {
+            alert(err.message)
         }
-        axios.post(url, data, config)
-            .then(response => {
-                const data = response.data
-                dispatch(addCustomer(data))
-                reset()
-                if(closeModal) {
-                    closeModal()
-                }
-            })
-            .catch(err => alert(err.message))
     }
 }
 
 export const asyncDeleteCustomer = (id) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+    return async (dispatch) => {
+        try {
+            const list = await getData('customers.json')
+            const customer = list.find(c => c._id === id)
+            const updated = list.filter(c => c._id !== id)
+            await saveData('customers.json', updated)
+            dispatch(deleteCustomer(customer))
+        } catch (err) {
+            alert(err.message)
         }
-        axios.delete(`${url}/${id}`, config)
-            .then(response => {
-                const data = response.data
-                dispatch(deleteCustomer(data))
-            })
-            .catch(err => alert(err.message))
     }
 }
 
 export const asyncUpdateCustomer = (id, data, reset) => {
-    return (dispatch) => {
-        const token = localStorage.getItem('token')
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+    return async (dispatch) => {
+        try {
+            const list = await getData('customers.json')
+            const updatedCustomer = { _id: id, ...data }
+            const updated = list.map(c => c._id === id ? updatedCustomer : c)
+            await saveData('customers.json', updated)
+            dispatch(updateCustomer(updatedCustomer))
+            reset()
+        } catch (err) {
+            alert(err.message)
         }
-        axios.put(`${url}/${id}`, data, config)
-            .then(response => {
-                const data = response.data
-                dispatch(updateCustomer(data))
-                reset()
-            })
-            .catch(err => alert(err.message))
     }
 }
