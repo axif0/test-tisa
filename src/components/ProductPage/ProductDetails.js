@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Paper, Box, Button, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import { Typography, Paper, Box, Button, Accordion, AccordionSummary, AccordionDetails, CircularProgress } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useDispatch } from 'react-redux'
 import { asyncDeleteProducts } from '../../action/productAction'
@@ -7,7 +7,7 @@ import moment from 'moment'
 import { getData } from '../../services/githubDB'
 import { englishToBengali } from '../../utils/bengaliNumerals'
 
-const useStyle = makeStyles({
+const useStyle = makeStyles((theme) => ({
     container: {
         width: '100%',
         maxWidth: '400px',
@@ -34,15 +34,24 @@ const useStyle = makeStyles({
     statsBox: {
         padding: '15px',
         marginBottom: '10px',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100]
     },
     ordersList: {
         marginTop: '20px'
     },
     accordion: {
-        marginBottom: '8px'
+        marginBottom: '8px',
+        '&.MuiAccordion-root': {
+            backgroundColor: theme.palette.background.paper
+        }
+    },
+    accordionSummary: {
+        '&.MuiAccordionSummary-root': {
+            backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100]
+        }
     }
-})
+}))
 
 const ProductDetails = (props) => {
     const { productId, resetViewProduct } = props
@@ -105,8 +114,8 @@ const ProductDetails = (props) => {
         fetchProductData()
     }, [productId])
 
-    const handleRemove = (id) => {
-        dispatch(asyncDeleteProducts(id))
+    const handleRemove = async (id) => {
+        await dispatch(asyncDeleteProducts(id))
         resetViewProduct()
     }
 
@@ -128,7 +137,9 @@ const ProductDetails = (props) => {
     if (isLoading) {
         return (
             <Paper className={classes.container}>
-                <Typography>Loading...</Typography>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+                    <CircularProgress />
+                </Box>
             </Paper>
         )
     }
@@ -150,7 +161,7 @@ const ProductDetails = (props) => {
             <Box className={classes.content}>
                 <Typography variant='h6'>নাম: {productData?.product?.name}</Typography>
                 <Typography variant='h6'>দাম: ৳{englishToBengali(productData?.product?.price)}</Typography>
-                <Typography variant='subtitle1'>
+                <Typography variant='subtitle1' sx={{ color: 'text.secondary' }}>
                     Added on: {productData?.product?.createdAt ? 
                         moment(productData.product.createdAt).format('DD/MM/YYYY, hh:mm A') : 
                         'N/A'}
@@ -158,19 +169,19 @@ const ProductDetails = (props) => {
             </Box>
 
             <Box className={classes.statsContainer}>
-                <Paper className={classes.statsBox} sx={{ bgcolor: 'grey.100' }}>
+                <Paper className={classes.statsBox} elevation={0}>
                     <Typography variant='h6' align='center'>মোট অর্ডার</Typography>
                     <Typography variant='h4' align='center'>
                         {englishToBengali(productData?.stats?.totalOrders || 0)}
                     </Typography>
                 </Paper>
-                <Paper className={classes.statsBox} sx={{ bgcolor: 'grey.100' }}>
+                <Paper className={classes.statsBox} elevation={0}>
                     <Typography variant='h6' align='center'>মোট বিক্রয়</Typography>
                     <Typography variant='h4' align='center'>
                         {englishToBengali(productData?.stats?.totalQuantity || 0)}
                     </Typography>
                 </Paper>
-                <Paper className={classes.statsBox} sx={{ bgcolor: 'grey.100' }}>
+                <Paper className={classes.statsBox} elevation={0}>
                     <Typography variant='h6' align='center'>মোট আয়</Typography>
                     <Typography variant='h4' align='center'>
                         ৳{englishToBengali(productData?.stats?.totalAmount || 0)}
@@ -186,7 +197,7 @@ const ProductDetails = (props) => {
                         
                         return (
                             <Accordion key={bill._id} className={classes.accordion}>
-                                <AccordionSummary>
+                                <AccordionSummary className={classes.accordionSummary}>
                                     <Box width='100%' display='flex' flexDirection='row' justifyContent='space-between'>
                                         <Typography component="span">{bill.customer.name || 'Unknown Customer'}</Typography>
                                         <Typography component="span">Qty: {englishToBengali(bill.items[0].quantity || 0)}</Typography>
