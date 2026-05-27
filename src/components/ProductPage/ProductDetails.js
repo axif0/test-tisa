@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Typography, Paper, Box, Button, Accordion, AccordionSummary, AccordionDetails, Container } from '@mui/material'
+import { Typography, Paper, Box, Button, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { useDispatch } from 'react-redux'
 import { asyncDeleteProducts } from '../../action/productAction'
@@ -45,7 +45,7 @@ const useStyle = makeStyles({
 })
 
 const ProductDetails = (props) => {
-    const { productId, resetViewProduct, handleUpdateProd } = props
+    const { productId, resetViewProduct } = props
     const classes = useStyle()
     const [productData, setProductData] = useState(null)
     const [isLoading, setIsLoading] = useState(false)

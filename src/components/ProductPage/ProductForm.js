@@ -3,7 +3,7 @@ import { TextField, Button, Box } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { asyncAddProducts, asyncUpdateProducts } from '../../action/productAction'
 import { makeStyles } from '@mui/styles'
-import { englishToBengali, bengaliToEnglish, isValidMixedNumber, convertMixedInputToNumber } from '../../utils/bengaliNumerals'
+import { englishToBengali, isValidMixedNumber, convertMixedInputToNumber } from '../../utils/bengaliNumerals'
 
 const useStyle = makeStyles({
     form: {

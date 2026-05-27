@@ -36,6 +36,7 @@ const RegisterForm = (props) => {
         }
     }
 
+    // eslint-disable-next-line no-unused-vars
     const resetForm = () => {
         setUsername('')
         setEmail('')
