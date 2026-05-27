@@ -75,13 +75,12 @@ const CustomerPage = (props) => {
                     >
                         <Typography variant='h5'>List of Customers - {customers.length}</Typography>
                         <TextField 
-                            sx={{ minWidth: '200px' }} 
+                            sx={{ minWidth: '200px', width: { xs: '100%', sm: '35%' } }} 
                             variant='outlined' 
                             margin='dense' 
                             value={search}
                             label='search customer by name, mobile or email' 
                             onChange={handleSearchChange}
-                            sx={{ width: { xs: '100%', sm: '35%' } }}
                         />
                     </Box>
                 <CustomerTable 

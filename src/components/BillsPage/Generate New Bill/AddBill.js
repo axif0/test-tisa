@@ -88,9 +88,8 @@ const AddBill = (props) => {
         <Container sx={{ width: '100%', padding: '2vh 1vw' }}>
             <Box display='flex' flexDirection='row' justifyContent='space-between'>
                 <Typography 
-                    sx={{ fontWeight: '700' }} 
+                    sx={{ fontWeight: '700', fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }} 
                     variant='h3'
-                    sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}
                 >
                     New Bill
                 </Typography>
