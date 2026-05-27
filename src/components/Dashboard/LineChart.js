@@ -21,7 +21,7 @@ const LineChart = (props) => {
     const calculateTotal = (data) => {
         let total = 0
         data.forEach(bill => {
-            total = bill.total + total
+            total = (bill.total || 0) + total
         })
         return total
     }

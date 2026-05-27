@@ -6,28 +6,9 @@ import AddProduct from './AddProduct'
 import EditProduct from './EditProduct'
 import ProductDetails from './ProductDetails'
 import ProductTable from './ProductTable'
-import { makeStyles } from '@mui/styles'
-
-const useStyle = makeStyles({
-    container: {
-        width: '100%',
-        padding: '2vh 2vw'
-    },
-    pageContent: {
-        width: '100%',
-        marginTop: '2px'
-    },
-    title:{
-        fontWeight: '700'
-    },
-    divider:{
-        width: '100%'
-    }
-})
 
 const ProductPage = (props) => {
     const products = useSelector(state => state.products)
-    const classes = useStyle()
     const dispatch = useDispatch()
     const [ updateProd, setUpdateProd ] = useState({})
     const [ viewProduct, setViewProduct ] = useState('')
@@ -83,9 +64,9 @@ const ProductPage = (props) => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container sx={{ width: '100%', padding: '2vh 2vw' }}>
             <Container disableGutters>
-                <Typography className={classes.title} variant='h3' sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>Products</Typography>
+                <Typography sx={{ fontWeight: '700' }} variant='h3' >Products</Typography>
                 {
                     Object.keys(updateProd).length > 0 ? (
                         <EditProduct updateProd={updateProd} resetUpdateProd={resetUpdateProd} />
@@ -93,9 +74,9 @@ const ProductPage = (props) => {
                         <AddProduct />
                     )
                 }
-                <Divider className={classes.divider} />
+                <Divider sx={{ width: '100%' }} />
             </Container>
-                <Grid className={classes.pageContent} spacing={2} container disableGutters>
+                <Grid sx={{ width: '100%', mt: '2px' }} spacing={2} container disableGutters>
                     <Grid size={{ lg: 8, md: 8, sm: 12, xs: 12 }}>
                         <Box 
                             disableGutters 

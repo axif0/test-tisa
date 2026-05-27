@@ -3,21 +3,13 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import validator from 'validator'
-import { makeStyles } from '@mui/styles'
 import { asyncLogin } from '../../action/loginAction'
-
-const useStyle = makeStyles({
-    formElements: {
-        marginTop: '15px'
-    }
-})
 
 const LoginForm = (props) => {  
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
     const [ formErrors, setFormErrors ] = useState({})
     const errors = {}
-    const classes = useStyle()
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -72,7 +64,7 @@ const LoginForm = (props) => {
                     <TextField 
                         variant='outlined'
                         margin='dense'
-                        className={classes.formElements}
+                        sx={{ mt: '15px' }}
                         name='password'
                         label='Password' 
                         value={password} 
@@ -84,11 +76,11 @@ const LoginForm = (props) => {
                     />
                     <Box display='flex' flexDirection='row'>
                         <Box flexGrow={1}>
-                            <Typography className={classes.formElements} variant='body1' > Forgot password? </Typography>
+                            <Typography sx={{ mt: '15px' }} variant='body1' > Forgot password? </Typography>
                         </Box>
                         <Box>
                             <Button 
-                                className={classes.formElements} 
+                                sx={{ mt: '15px' }} 
                                 type='submit' 
                                 color='primary' 
                                 variant='contained'

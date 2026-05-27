@@ -1,67 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Typography, Paper, Box, Button, Accordion, AccordionSummary, AccordionDetails, CircularProgress } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { useTheme } from '@mui/material/styles'
 import { useDispatch } from 'react-redux'
 import { asyncDeleteProducts } from '../../action/productAction'
 import moment from 'moment'
 import { getData } from '../../services/githubDB'
 import { englishToBengali } from '../../utils/bengaliNumerals'
 
-const useStyle = makeStyles((theme) => ({
-    container: {
-        width: '100%',
-        maxWidth: '400px',
-        padding: '20px',
-        maxHeight: '80vh',
-        overflowY: 'auto'
-    },
-    content: {
-        marginTop: '20px'
-    },
-    noProduct: {
-        width: '150px',
-        wordBreak: 'break-word'
-    },
-    detailsTitle: {
-        textAlign: 'center',
-        fontWeight: 600,
-        marginBottom: '20px'
-    },
-    statsContainer: {
-        marginTop: '20px',
-        marginBottom: '20px'
-    },
-    statsBox: {
-        padding: '15px',
-        marginBottom: '10px',
-        borderRadius: '4px',
-        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100]
-    },
-    ordersList: {
-        marginTop: '20px'
-    },
-    accordion: {
-        marginBottom: '8px',
-        '&.MuiAccordion-root': {
-            backgroundColor: theme.palette.background.paper
-        }
-    },
-    accordionSummary: {
-        '&.MuiAccordionSummary-root': {
-            backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100]
-        }
-    }
-}))
-
 const ProductDetails = (props) => {
     const { productId, resetViewProduct } = props
-    const classes = useStyle()
+    const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
     const [productData, setProductData] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
     const dispatch = useDispatch()
 
     useEffect(() => {
+        let cancelled = false
         const fetchProductData = async () => {
             if (!productId) return
             setIsLoading(true)
@@ -98,20 +54,25 @@ const ProductDetails = (props) => {
                     return sum + bill.items.reduce((itemSum, item) => itemSum + (item.subTotal || 0), 0)
                 }, 0)
 
-                setProductData({
-                    product,
-                    stats: { totalOrders, totalQuantity, totalAmount },
-                    bills: productBills
-                })
+                if (!cancelled) {
+                    setProductData({
+                        product,
+                        stats: { totalOrders, totalQuantity, totalAmount },
+                        bills: productBills
+                    })
+                }
             } catch (err) {
-                console.error('Error fetching product data:', err)
-                setError(err.message || 'Could not fetch product data')
+                if (!cancelled) {
+                    console.error('Error fetching product data:', err)
+                    setError(err.message || 'Could not fetch product data')
+                }
             } finally {
-                setIsLoading(false)
+                if (!cancelled) setIsLoading(false)
             }
         }
 
         fetchProductData()
+        return () => { cancelled = true }
     }, [productId])
 
     const handleRemove = async (id) => {
@@ -124,10 +85,38 @@ const ProductDetails = (props) => {
         resetViewProduct()
     }
 
+    const containerSx = {
+        width: '100%',
+        maxWidth: '400px',
+        padding: '20px',
+        maxHeight: '80vh',
+        overflowY: 'auto'
+    }
+
+    const statsBoxSx = {
+        padding: '15px',
+        marginBottom: '10px',
+        borderRadius: '4px',
+        backgroundColor: isDark ? theme.palette.grey[800] : theme.palette.grey[100]
+    }
+
+    const accordionSx = {
+        marginBottom: '8px',
+        '&.MuiAccordion-root': {
+            backgroundColor: theme.palette.background.paper
+        }
+    }
+
+    const accordionSummarySx = {
+        '&.MuiAccordionSummary-root': {
+            backgroundColor: isDark ? theme.palette.grey[800] : theme.palette.grey[100]
+        }
+    }
+
     if (!productId) {
         return (
-            <Paper className={classes.container}>
-                <Typography className={classes.noProduct} variant='h6' sx={{ color: 'text.secondary' }}>
+            <Paper sx={containerSx}>
+                <Typography variant='h6' sx={{ width: '150px', wordBreak: 'break-word', color: 'text.secondary' }}>
                     Select a product to view its details
                 </Typography>
             </Paper>
@@ -136,7 +125,7 @@ const ProductDetails = (props) => {
 
     if (isLoading) {
         return (
-            <Paper className={classes.container}>
+            <Paper sx={containerSx}>
                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
                     <CircularProgress />
                 </Box>
@@ -146,7 +135,7 @@ const ProductDetails = (props) => {
 
     if (error) {
         return (
-            <Paper className={classes.container}>
+            <Paper sx={containerSx}>
                 <Typography color="error">{error}</Typography>
             </Paper>
         )
@@ -155,10 +144,10 @@ const ProductDetails = (props) => {
     if (!productData) return null
 
     return (
-        <Paper className={classes.container}>
-            <Typography className={classes.detailsTitle} variant='h5'>Product Details</Typography>
+        <Paper sx={containerSx}>
+            <Typography variant='h5' sx={{ textAlign: 'center', fontWeight: 600, mb: '20px' }}>Product Details</Typography>
             
-            <Box className={classes.content}>
+            <Box sx={{ mt: '20px' }}>
                 <Typography variant='h6'>নাম: {productData?.product?.name}</Typography>
                 <Typography variant='h6'>দাম: ৳{englishToBengali(productData?.product?.price)}</Typography>
                 <Typography variant='subtitle1' sx={{ color: 'text.secondary' }}>
@@ -168,20 +157,20 @@ const ProductDetails = (props) => {
                 </Typography>
             </Box>
 
-            <Box className={classes.statsContainer}>
-                <Paper className={classes.statsBox} elevation={0}>
+            <Box sx={{ mt: '20px', mb: '20px' }}>
+                <Paper sx={statsBoxSx} elevation={0}>
                     <Typography variant='h6' align='center'>মোট অর্ডার</Typography>
                     <Typography variant='h4' align='center'>
                         {englishToBengali(productData?.stats?.totalOrders || 0)}
                     </Typography>
                 </Paper>
-                <Paper className={classes.statsBox} elevation={0}>
+                <Paper sx={statsBoxSx} elevation={0}>
                     <Typography variant='h6' align='center'>মোট বিক্রয়</Typography>
                     <Typography variant='h4' align='center'>
                         {englishToBengali(productData?.stats?.totalQuantity || 0)}
                     </Typography>
                 </Paper>
-                <Paper className={classes.statsBox} elevation={0}>
+                <Paper sx={statsBoxSx} elevation={0}>
                     <Typography variant='h6' align='center'>মোট আয়</Typography>
                     <Typography variant='h4' align='center'>
                         ৳{englishToBengali(productData?.stats?.totalAmount || 0)}
@@ -189,15 +178,15 @@ const ProductDetails = (props) => {
                 </Paper>
             </Box>
 
-            <Box className={classes.ordersList}>
+            <Box sx={{ mt: '20px' }}>
                 <Typography variant='h6'>Order History</Typography>
                 {productData?.bills?.length > 0 ? (
                     productData.bills.map((bill) => {
                         if (!bill?.customer || !bill?.items?.[0]) return null;
                         
                         return (
-                            <Accordion key={bill._id} className={classes.accordion}>
-                                <AccordionSummary className={classes.accordionSummary}>
+                            <Accordion key={bill._id} sx={accordionSx}>
+                                <AccordionSummary sx={accordionSummarySx}>
                                     <Box width='100%' display='flex' flexDirection='row' justifyContent='space-between'>
                                         <Typography component="span">{bill.customer.name || 'Unknown Customer'}</Typography>
                                         <Typography component="span">Qty: {englishToBengali(bill.items[0].quantity || 0)}</Typography>

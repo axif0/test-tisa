@@ -1,39 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Typography, Box, Divider, TextField } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { useSelector, useDispatch } from 'react-redux'
 import { asyncGetCustomers } from '../../action/customerAction'
 import EditCustomer from './EditCustomer'
 import AddCustomer from './AddCustomer'
 import CustomerTable from './CustomerTable'
 
-const useStyle = makeStyles({
-    container: {
-        width: '100%',
-        padding: '2vh 2vw',
-        display: 'flex',
-        flexDirection : 'row',
-        justifyContent: 'center'
-    },
-    title:{
-        fontWeight: '700'
-    },
-    tableContainer:{
-        marginTop: '20px'
-    }, 
-    divider:{
-        width: '100%'
-    },
-    tableContainerTitle:{
-        width: '100%'
-    },
-    searchField:{
-        minWidth: '200px'
-    }
-})
-
 const CustomerPage = (props) => {
-    const classes = useStyle()
     const customers = useSelector(state => state.customers)
     const dispatch = useDispatch()
     const [ search, setSearch ] = useState('')
@@ -78,9 +51,9 @@ const CustomerPage = (props) => {
     }
 
     return (
-        <Container className={classes.container} >
+        <Container sx={{ width: '100%', padding: '2vh 2vw', display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
             <Container disableGutters>
-                <Typography className={classes.title} variant='h3' sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}>Customers</Typography>
+                <Typography sx={{ fontWeight: '700' }} variant='h3' >Customers</Typography>
                 {
                     Object.keys(updateCust).length > 0 ? (
                         <EditCustomer updateCust={updateCust} resetUpdateCust={resetUpdateCust} />
@@ -88,21 +61,21 @@ const CustomerPage = (props) => {
                         <AddCustomer />
                     )
                 }
-                <Divider className={classes.divider} />
+                <Divider sx={{ width: '100%' }} />
             </Container>
             
-            <Box className={classes.tableContainer}>
+            <Box sx={{ mt: '20px' }}>
                     <Box 
                         disableGutters 
                         display='flex' 
                         flexDirection='row' 
                         alignItems='baseline' 
                         justifyContent='space-between' 
-                        className={classes.tableContainerTitle} 
+                        sx={{ width: '100%' }} 
                     >
                         <Typography variant='h5'>List of Customers - {customers.length}</Typography>
                         <TextField 
-                            className={classes.searchField} 
+                            sx={{ minWidth: '200px' }} 
                             variant='outlined' 
                             margin='dense' 
                             value={search}

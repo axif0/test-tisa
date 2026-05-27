@@ -1,32 +1,14 @@
 import React from 'react'
 import { Table, TableContainer, TableRow, TableHead, TableCell, TableBody, IconButton, Paper, Container, TableFooter, TextField, Box } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { englishToBengali, isValidMixedNumber, convertMixedInputToNumber, formatNumber } from '../../../utils/bengaliNumerals'
 
-const useStyle = makeStyles({
-    tableHeaderFooter: {
-        fontWeight: 600,
-        fontSize: '0.875rem'
-    },
-    quantityInput: {
-        width: '100px',
-        margin: '0 8px',
-        '& input': {
-            padding: '5px 8px',
-            fontSize: '14px'
-        }
-    },
-    quantityCell: {
-        minWidth: '200px'
-    }
-})
+const headerFooterSx = { fontWeight: 600, fontSize: '0.875rem' }
 
 const ProductListTable = (props) => {
     const { items, handleChangeQuantity, handleRemoveLineItem } = props
-    const classes = useStyle()
 
     const calculateSubTotal = (quantity, price) => {
         // Convert to numbers and handle decimals properly
@@ -113,12 +95,12 @@ const ProductListTable = (props) => {
                     <Table size='small'>
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.tableHeaderFooter} sx={{ display: { xs: 'none', sm: 'table-cell' }, color: 'text.primary' }}>ক্রমিক</TableCell>
-                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>মালের নাম</TableCell>
-                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>দাম</TableCell>
-                                <TableCell className={`${classes.tableHeaderFooter} ${classes.quantityCell}`} sx={{ color: 'text.primary' }}>পরিমান</TableCell>
-                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>মোট</TableCell>
-                                <TableCell className={classes.tableHeaderFooter} sx={{ color: 'text.primary' }}>বাতিল</TableCell>
+                                <TableCell sx={{ ...headerFooterSx, display: { xs: 'none', sm: 'table-cell' }, color: 'text.primary' }}>ক্রমিক</TableCell>
+                                <TableCell sx={headerFooterSx}>মালের নাম</TableCell>
+                                <TableCell sx={headerFooterSx}>দাম</TableCell>
+                                <TableCell sx={{ ...headerFooterSx, minWidth: '200px' }}>পরিমান</TableCell>
+                                <TableCell sx={headerFooterSx}>মোট</TableCell>
+                                <TableCell sx={headerFooterSx}>বাতিল</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -127,7 +109,7 @@ const ProductListTable = (props) => {
                                     <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{englishToBengali(index + 1)}</TableCell>
                                     <TableCell>{product.name}</TableCell>
                                     <TableCell>৳{formatNumber(product.price, 2)}</TableCell>
-                                    <TableCell className={classes.quantityCell}>
+                                    <TableCell sx={{ minWidth: '200px' }}>
                                         <Box display='flex' alignItems='center'>
                                             <IconButton 
                                                 size='small'
@@ -137,7 +119,7 @@ const ProductListTable = (props) => {
                                                 <RemoveIcon />
                                             </IconButton>
                                             <TextField
-                                                className={classes.quantityInput}
+                                                sx={{ width: '100px', m: '0 8px', '& input': { p: '5px 8px', fontSize: '14px' } }}
                                                 size="small"
                                                 type="text"
                                                 value={formatNumber(product.quantity, 3)}
@@ -174,8 +156,8 @@ const ProductListTable = (props) => {
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
                                 <TableCell></TableCell>
-                                <TableCell className={classes.tableHeaderFooter}>মোট টাকা</TableCell>
-                                <TableCell className={classes.tableHeaderFooter}>৳{calculateTotal(items)}</TableCell>
+                                <TableCell sx={headerFooterSx}>মোট টাকা</TableCell>
+                                <TableCell sx={headerFooterSx}>৳{calculateTotal(items)}</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
                         </TableFooter>

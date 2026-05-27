@@ -3,41 +3,11 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router'
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, CircularProgress } from '@mui/material'
 import { asyncDeleteCustomer } from '../../action/customerAction'
-import { makeStyles } from '@mui/styles'
 import Swal from 'sweetalert2'
-
-const useStyle = makeStyles({
-    table: {
-        width: '100%',
-        marginTop: '5px',
-        maxHeight: '60vh',
-        overflow: 'auto'
-    },
-    nameColumn:{
-        width: '25%'
-    },
-    emailColumn:{
-        width: '25%'
-    },
-    tableBtns:{
-        display: 'flex',
-        flexDirection:'row',
-        justifyContent: 'space-evenly'
-    },
-    tableHeader: {
-        position: 'sticky',
-        top: 0,
-        zIndex: 1
-    },
-    viewLink: {
-        textDecoration: 'none'
-    }
-})
 
 const CustomerTable = (props) => {
     const { handleUpdateCustomer, customers, resetSearch } = props
     const dispatch = useDispatch()
-    const classes = useStyle()
     const [deletingId, setDeletingId] = useState(null)
 
     const handleDelete = async (id) => {
@@ -63,16 +33,16 @@ const CustomerTable = (props) => {
     }
 
     return (
-        <TableContainer component={Paper} className={classes.table} >
+        <TableContainer component={Paper} sx={{ width: '100%', mt: '5px', maxHeight: '60vh', overflow: 'auto' }} >
             <Table stickyHeader size='small'>
                 <TableHead>
                     <TableRow>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>ID</TableCell>
-                        <TableCell className={`${classes.nameColumn} ${classes.tableHeader}`} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>Customer Name</TableCell>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>Mobile</TableCell>
-                        <TableCell className={`${classes.emailColumn} ${classes.tableHeader}`} align='center' sx={{ display: { xs: 'none', md: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>Email</TableCell>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>View</TableCell>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>Action</TableCell>
+                        <TableCell align='center' sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>ID</TableCell>
+                        <TableCell align='center' sx={{ width: '25%', bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>Customer Name</TableCell>
+                        <TableCell align='center' sx={{ bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>Mobile</TableCell>
+                        <TableCell align='center' sx={{ width: '25%', display: { xs: 'none', md: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>Email</TableCell>
+                        <TableCell align='center' sx={{ bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>View</TableCell>
+                        <TableCell align='center' sx={{ bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>Action</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -86,7 +56,7 @@ const CustomerTable = (props) => {
                                     <TableCell> {cust.mobile} </TableCell>
                                     <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}> {cust.email} </TableCell>
                                     <TableCell align='center'> 
-                                        <Link to={`/customers/${cust._id}`} className={classes.viewLink}>
+                                        <Link to={`/customers/${cust._id}`} style={{ textDecoration: 'none' }}>
                                             <Button
                                                 variant='contained'
                                                 color='primary'

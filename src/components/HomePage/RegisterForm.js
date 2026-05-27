@@ -1,15 +1,8 @@
 import React, { useState } from 'react'
 import { Box, Grid, TextField, Typography, Button } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import validator from 'validator'
 import { useDispatch } from 'react-redux'
 import { asyncRegister } from '../../action/registerAction'
-
-const useStyle = makeStyles({
-    formElements: {
-        marginTop: '15px'
-    }
-})
 
 const RegisterForm = (props) => {
     const [ username, setUsername ] = useState('')
@@ -19,7 +12,6 @@ const RegisterForm = (props) => {
     const [ address, setAddress ] = useState('')
     const [ formErrors, setFormErrors ] = useState({})
     const errors = {}
-    const classes = useStyle()
     const dispatch = useDispatch()
 
     const handleChange = (e) => {
@@ -102,7 +94,7 @@ const RegisterForm = (props) => {
                         required
                     /> <br />
                     <TextField
-                        className={classes.formElements}
+                        sx={{ mt: '15px' }}
                         variant='outlined'
                         margin='dense'
                         name='email'
@@ -115,7 +107,7 @@ const RegisterForm = (props) => {
                         required
                     /> <br />
                     <TextField
-                        className={classes.formElements}
+                        sx={{ mt: '15px' }}
                         variant='outlined'
                         margin='dense'
                         type='password'
@@ -129,7 +121,7 @@ const RegisterForm = (props) => {
                         required
                     /> <br />
                     <TextField
-                        className={classes.formElements}
+                        sx={{ mt: '15px' }}
                         variant='outlined'
                         margin='dense'
                         name='businessName'
@@ -142,7 +134,7 @@ const RegisterForm = (props) => {
                         required
                     /> <br />
                     <TextField
-                        className={classes.formElements}
+                        sx={{ mt: '15px' }}
                         variant='outlined'
                         margin='dense'
                         name='address'
@@ -158,7 +150,7 @@ const RegisterForm = (props) => {
                     /> <br />
                     <Box display='flex' flexDirection='row' justifyContent='flex-end'>
                         <Button 
-                            className={classes.formElements}
+                            sx={{ mt: '15px' }}
                             type='submit'
                             variant='contained'
                             color='primary'

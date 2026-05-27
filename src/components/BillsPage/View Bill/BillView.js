@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router'
 import { Container, IconButton, Typography, Box, Tooltip, CircularProgress } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useDispatch } from 'react-redux'
 import { asyncGetBillDetail } from '../../../action/billsAction'
@@ -9,21 +8,9 @@ import BillDetail from './BillDetail'
 import BillItemtable from './BillItemTable'
 import PrintBill from './PrintBill'
 
-const useStyle = makeStyles({
-    container: {
-        width: '100%',
-        padding: '2vh 1vw'
-    },
-    loadingContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '200px'
-    }
-})
+const containerSx = { width: '100%', padding: '2vh 1vw' }
 
 const BillView = () => {
-    const classes = useStyle()
     const { id } = useParams()
     const [billDetails, setBillDetails] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -40,20 +27,26 @@ const BillView = () => {
     }, [])
 
     useEffect(() => {
+        let cancelled = false
         const fetchBillDetails = async () => {
             setIsLoading(true)
             setError(null)
             try {
-                await dispatch(asyncGetBillDetail(id, handleBillDetails))
+                await dispatch(asyncGetBillDetail(id, (data) => {
+                    if (!cancelled) handleBillDetails(data)
+                }))
             } catch (err) {
-                setError(err.message || 'Failed to load bill details')
-                setIsLoading(false)
+                if (!cancelled) {
+                    setError(err.message || 'Failed to load bill details')
+                    setIsLoading(false)
+                }
             }
         }
 
         if (id) {
             fetchBillDetails()
         }
+        return () => { cancelled = true }
     }, [dispatch, id, handleBillDetails])
 
     const handleAddressChange = (address) => {
@@ -62,7 +55,7 @@ const BillView = () => {
 
     if (isLoading) {
         return (
-            <Container className={classes.loadingContainer}>
+            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
                 <CircularProgress />
             </Container>
         )
@@ -70,7 +63,7 @@ const BillView = () => {
 
     if (error) {
         return (
-            <Container className={classes.container}>
+            <Container sx={containerSx}>
                 <Typography color="error" align="center">
                     {error}
                 </Typography>
@@ -80,7 +73,7 @@ const BillView = () => {
 
     if (!billDetails || !billDetails.items) {
         return (
-            <Container className={classes.container}>
+            <Container sx={containerSx}>
                 <Typography color="error" align="center">
                     Bill not found or has no items
                 </Typography>
@@ -89,7 +82,7 @@ const BillView = () => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container sx={containerSx}>
             <Box display='flex' flexDirection='row' justifyContent='space-between'>
                 <Tooltip title='Go back to bills page'>
                     <Link to='/bills'>

@@ -1,24 +1,8 @@
 import React, { useState } from 'react'
 import { Backdrop, Box, Button, Fade, Modal, Paper, Container, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import CustomerForm from '../../CustomerPage/CustomerForm'
 
-const useStyle = makeStyles({
-    modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    formContainer: {
-        padding: '20px 10px 20px 20px'
-    },
-    formTitle: {
-        fontWeight: '600'
-    }
-})
-
 const AddCustomerModal = (props) => {
-    const classes = useStyle()
     const [ open, setOpen ] = useState(false)
 
     const handleOpen = () => {
@@ -39,7 +23,7 @@ const AddCustomerModal = (props) => {
                 Add New Customer
             </Button>
             <Modal
-                className={classes.modal}
+                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition
@@ -52,8 +36,8 @@ const AddCustomerModal = (props) => {
             >
                 <Fade in={open}>
                     <Paper sx={{ width: { xs: '95%', sm: 'auto' }, maxWidth: 500, maxHeight: '90vh', overflow: 'auto' }}>
-                        <Container className={classes.formContainer}>
-                            <Typography className={classes.formTitle} align='center' variant='h5'>Add Customer</Typography>
+                        <Container sx={{ p: '20px 10px 20px 20px' }}>
+                            <Typography sx={{ fontWeight: '600' }} align='center' variant='h5'>Add Customer</Typography>
                             <CustomerForm handleClose={handleClose}/>
                         </Container>  
                     </Paper>

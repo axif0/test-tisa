@@ -1,7 +1,5 @@
 import { Grid } from '@mui/material'
 import LineChart from './LineChart'
-// eslint-disable-next-line no-unused-vars
-import BarChart from './BarChart'
 
 const StatsChart = (props) => {
 

@@ -1,33 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { Container, IconButton, CircularProgress, Box, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Link, useParams } from 'react-router'
 import CustomerStats from './CustomerStats'
 import CustomerOrders from './CustomerOrders'
 import { getData } from '../../../services/githubDB'
 
-const useStyle = makeStyles({
-    container: {
-        width: '100%',
-        padding: '2vh 1vw'
-    },
-    loading: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '200px'
-    }
-})
+const containerSx = { width: '100%', padding: '2vh 1vw' }
 
 const ViewCustomer = () => {
-    const classes = useStyle()
     const [customerData, setCustomerData] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
     const { id } = useParams()
 
     useEffect(() => {
+        let cancelled = false
         const fetchCustomerData = async () => {
             setIsLoading(true)
             try {
@@ -49,29 +37,34 @@ const ViewCustomer = () => {
 
                 const totalAmount = customerBills.reduce((sum, bill) => sum + (Number(bill.total) || 0), 0)
 
-                setCustomerData({
-                    customer,
-                    stats: {
-                        totalOrders: customerBills.length,
-                        totalAmount
-                    },
-                    bills: customerBills
-                })
+                if (!cancelled) {
+                    setCustomerData({
+                        customer,
+                        stats: {
+                            totalOrders: customerBills.length,
+                            totalAmount
+                        },
+                        bills: customerBills
+                    })
+                }
             } catch (err) {
-                console.error('Error fetching customer data:', err)
-                setError(err.message || 'Could not fetch customer data')
+                if (!cancelled) {
+                    console.error('Error fetching customer data:', err)
+                    setError(err.message || 'Could not fetch customer data')
+                }
             } finally {
-                setIsLoading(false)
+                if (!cancelled) setIsLoading(false)
             }
         }
 
         fetchCustomerData()
+        return () => { cancelled = true }
     }, [id])
 
     if (isLoading) {
         return (
-            <Container className={classes.container}>
-                <Box className={classes.loading}>
+            <Container sx={containerSx}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
                     <CircularProgress />
                 </Box>
             </Container>
@@ -80,7 +73,7 @@ const ViewCustomer = () => {
 
     if (error) {
         return (
-            <Container className={classes.container}>
+            <Container sx={containerSx}>
                 <Typography color="error" variant="h6" align="center">
                     {error}
                 </Typography>
@@ -89,7 +82,7 @@ const ViewCustomer = () => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container sx={containerSx}>
             <Link to='/customers'>
                 <IconButton size='medium'>
                     <ArrowBackIcon />

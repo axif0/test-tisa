@@ -1,34 +1,14 @@
 import React from 'react'
 import { Grid, Typography, Paper, Box } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { useSelector } from 'react-redux'
 import StatsItem from './StatsItem'
 import moment from 'moment'
 import { englishToBengali } from '../../utils/bengaliNumerals'
 
-const useStyle = makeStyles({
-    statsHeader: {
-        fontWeight: 700
-    },
-    productStats: {
-        marginTop: '20px',
-        padding: '15px'
-    },
-    productRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        padding: '8px 0'
-    },
-    noSales: {
-        marginTop: '10px'
-    }
-})
-
 const StatsContainer = (props) => {
     const products = useSelector(state => state.products) || []
     const customers = useSelector(state => state.customers) || []
     const bills = useSelector(state => state.bills) || []
-    const classes = useStyle()
 
     const todayBills = Array.isArray(bills) ? bills.filter(bill => 
         moment(bill.createdAt).isBetween(moment().startOf('days'), moment(), null, '[]')
@@ -71,13 +51,13 @@ const StatsContainer = (props) => {
 
     return(
         <>
-            <Typography variant='h6' className={classes.statsHeader}>Overall Stats</Typography>
+            <Typography variant='h6' sx={{ fontWeight: 700 }}>Overall Stats</Typography>
             <Grid container spacing={{ xs: 2, md: 6 }}>
                 <StatsItem statTitle={'মোট গ্রাহক'} statNumber={englishToBengali(customers.length)} />
                 <StatsItem statTitle={'মোট পণ্য'} statNumber={englishToBengali(products.length)} />
                 <StatsItem statTitle={'মোট অর্ডার'} statNumber={englishToBengali(bills.length)} />
             </Grid>
-            <Typography variant='h6' className={classes.statsHeader}>Daily Stats</Typography>
+            <Typography variant='h6' sx={{ fontWeight: 700 }}>Daily Stats</Typography>
             <Grid container spacing={{ xs: 2, md: 6 }}>
                 <StatsItem statTitle={'আজকের বিল সংখ্যা'} statNumber={englishToBengali(todayBills.length)} />
                 <StatsItem statTitle={'আজকের বিল'} statNumber={calculateTotal(todayBills)} />
@@ -85,17 +65,17 @@ const StatsContainer = (props) => {
             </Grid>
 
             {/* Daily Product Quantities */}
-            <Paper className={classes.productStats}>
-                <Typography variant='h6' className={classes.statsHeader}>আজকের বিক্রয়ের পরিমাণ</Typography>
+            <Paper sx={{ mt: '20px', p: '15px' }}>
+                <Typography variant='h6' sx={{ fontWeight: 700 }}>আজকের বিক্রয়ের পরিমাণ</Typography>
                 {dailyProductStats.length > 0 ? (
                     dailyProductStats.map((product, index) => (
-                        <Box key={index} className={classes.productRow} sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                        <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', p: '8px 0', borderBottom: '1px solid', borderColor: 'divider' }}>
                             <Typography>{product.name}</Typography>
                             <Typography>{englishToBengali(product.quantity)}</Typography>
                         </Box>
                     ))
                 ) : (
-                    <Typography align="center" className={classes.noSales} sx={{ color: 'text.secondary' }}>
+                    <Typography align="center" sx={{ mt: '10px', color: 'text.secondary' }}>
                         আজ কোনো বিক্রয় হয়নি
                     </Typography>
                 )}

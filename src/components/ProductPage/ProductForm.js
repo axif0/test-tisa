@@ -2,18 +2,7 @@ import React, { useState } from 'react'
 import { TextField, Button, Box, CircularProgress } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { asyncAddProducts, asyncUpdateProducts } from '../../action/productAction'
-import { makeStyles } from '@mui/styles'
 import { englishToBengali, isValidMixedNumber, convertMixedInputToNumber } from '../../utils/bengaliNumerals'
-
-const useStyle = makeStyles({
-    form: {
-        marginTop: '20px'
-    },
-    input: {
-        width: '100%',
-        marginBottom: '15px'
-    }
-})
 
 const ProductForm = (props) => {
     const { name: prodName, price: prodPrice, _id, resetUpdateProd } = props
@@ -23,7 +12,6 @@ const ProductForm = (props) => {
     const [ loading, setLoading ] = useState(false)
     const errors = {}
     const dispatch = useDispatch()
-    const classes = useStyle()
 
     const handleChange = (e) => {
         if(e.target.name === 'name') {
@@ -89,9 +77,9 @@ const ProductForm = (props) => {
     }
 
     return (
-        <Box component='form' onSubmit={handleSubmit} className={classes.form}>
+        <Box component='form' onSubmit={handleSubmit} sx={{ mt: '20px' }}>
             <TextField
-                className={classes.input}
+                sx={{ width: '100%', mb: '15px' }}
                 label='পণ্যের নাম'
                 name='name'
                 value={name}
@@ -102,7 +90,7 @@ const ProductForm = (props) => {
                 disabled={loading}
             />
             <TextField
-                className={classes.input}
+                sx={{ width: '100%', mb: '15px' }}
                 label='দাম'
                 name='price'
                 value={price}

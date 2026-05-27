@@ -7,7 +7,7 @@ import { flushAll } from './services/githubDB'
 import './index.css';
 import App from './App';
 
-window.addEventListener('beforeunload', () => { flushAll(); });
+window.addEventListener('beforeunload', () => { flushAll().catch(() => {}); });
 
 const store = configureStore()
 

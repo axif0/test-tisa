@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Container, Typography, Box, Grid } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { useNavigate } from 'react-router'
 import ProductSuggestion from './ProductSuggestion'
 import ProductListTable from './ProductListTable'
@@ -8,21 +7,7 @@ import SummaryOfBill from './SummaryOfBill'
 import AddCustomerModal from './AddCustomerModal'
 import Swal from 'sweetalert2'
 
-const useStyle = makeStyles({
-    title:{
-        fontWeight: '700'
-    },
-    container: {
-        width: '100%',
-        padding: '2vh 1vw'
-    },
-    gridContainer: {
-        minHeight: '60vh'
-    }
-})
-
 const AddBill = (props) => {
-    const classes = useStyle()
     const navigate = useNavigate()
     const [ lineItems, setLineItems ] = useState([])
     const [ customerInfo, setCustomerInfo ] = useState(null)
@@ -100,10 +85,10 @@ const AddBill = (props) => {
     }
 
     return (
-        <Container className={classes.container}>
+        <Container sx={{ width: '100%', padding: '2vh 1vw' }}>
             <Box display='flex' flexDirection='row' justifyContent='space-between'>
                 <Typography 
-                    className={classes.title} 
+                    sx={{ fontWeight: '700' }} 
                     variant='h3'
                     sx={{ fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}
                 >
@@ -111,7 +96,7 @@ const AddBill = (props) => {
                 </Typography>
                 <AddCustomerModal />
             </Box>
-            <Grid className={classes.gridContainer} container spacing={2}>
+            <Grid sx={{ minHeight: '60vh' }} container spacing={2}>
                 <Grid size={{ lg: 9, md: 9, sm: 12, xs: 12 }}>
                     <ProductSuggestion handleAddLineItem={handleAddLineItem} />
                     <ProductListTable 

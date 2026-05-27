@@ -1,5 +1,5 @@
 export const englishToBengali = (number) => {
-    if (number === undefined || number === null) return '০';
+    if (number === undefined || number === null || (typeof number === 'number' && isNaN(number))) return '০';
     
     // Convert number to string with proper decimal handling
     const numStr = typeof number === 'number' ? number.toString() : number;
@@ -72,6 +72,6 @@ export const formatNumber = (number, maxDecimals = 2) => {
 
 // Helper function to format large numbers
 export const formatLargeNumber = (number) => {
-    if (!number) return '০';
+    if (number === undefined || number === null) return '০';
     return number.toLocaleString('bn-BD');
 }; 

@@ -1,24 +1,12 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { TextField, Typography, Box } from '@mui/material'
-import { Autocomplete } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-
-const useStyle = makeStyles({
-    custInfo: {
-        height: '150px'
-    },
-    noInfo:{
-        wordBreak: 'break-word'
-    }
-})
+import { TextField, Typography, Box, Autocomplete } from '@mui/material'
 
 const CustomerSuggestion = (props) => {
     const { handleCustomerInfo } = props
     const customers = useSelector(state => state.customers)
     const [ value, setValue ] = useState(null)
     const [ inputValue, setInputValue ] = useState('')
-    const classes = useStyle()
 
     const handleValueChange = (e, newValue) => {
         setValue(newValue)
@@ -43,14 +31,14 @@ const CustomerSuggestion = (props) => {
 
             {
                 (value && value._id) ? (
-                    <Box className={classes.custInfo} display='flex' flexDirection='column' justifyContent='center'>
+                    <Box sx={{ height: '150px' }} display='flex' flexDirection='column' justifyContent='center'>
                         <Typography variant='body1'><strong>Name: </strong>{value.name}</Typography>
                         <Typography variant='body1'><strong>Email: </strong>{value.email}</Typography>
                         <Typography variant='body1'><strong>Mobile: </strong>{value.mobile}</Typography>
                     </Box>
                 ) : (
-                    <Box className={classes.custInfo} display='flex' flexDirection='column' justifyContent='center'>
-                        <Typography className={classes.noInfo} variant='body1' sx={{ color: 'text.secondary' }}>Enter mobile number of customer to display details</Typography>
+                    <Box sx={{ height: '150px' }} display='flex' flexDirection='column' justifyContent='center'>
+                        <Typography sx={{ wordBreak: 'break-word', color: 'text.secondary' }} variant='body1'>Enter mobile number of customer to display details</Typography>
                     </Box>
                 )
             }

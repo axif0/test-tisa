@@ -2,39 +2,18 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, CircularProgress } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { asyncDeleteBill, asyncGetBills } from '../../action/billsAction'
 import moment from 'moment'
 import Swal from 'sweetalert2'
 import { formatLargeNumber } from '../../utils/bengaliNumerals'
 
-const useStyle = makeStyles({
-    table: {
-        position: 'relative',
-        width: '100%',
-        marginTop: '5px',
-        maxHeight: '70vh',
-        overflow: 'auto'
-    },
-    tableHeader: {
-        position: 'sticky',
-        top: 0,
-        zIndex: 1
-    },
-    viewLink: {
-        textDecoration: 'none'
-    },
-    actionCell: {
-        display: 'flex',
-        gap: '8px'
-    }
-})
+const tableSx = { position: 'relative', width: '100%', mt: '5px', maxHeight: '70vh', overflow: 'auto' }
+const headerSx = { position: 'sticky', top: 0, zIndex: 1 }
 
 const BillsTable = (props) => {
     const dispatch = useDispatch()
     const { bills, resetSearch } = props
     const customers = useSelector(state => state.customers)
-    const classes = useStyle()
     const [deletingId, setDeletingId] = useState(null)
 
     const reversedBills = Array.isArray(bills) ? [...bills].reverse() : []
@@ -86,11 +65,11 @@ const BillsTable = (props) => {
 
     if (!Array.isArray(bills) || bills.length === 0) {
         return (
-            <TableContainer component={Paper} className={classes.table}>
+            <TableContainer component={Paper} sx={tableSx}>
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <TableCell className={classes.tableHeader} colSpan={5} align="center">
+                            <TableCell sx={headerSx} colSpan={5} align="center">
                                 No bills found
                             </TableCell>
                         </TableRow>
@@ -101,15 +80,15 @@ const BillsTable = (props) => {
     }
 
     return (
-        <TableContainer component={Paper} className={classes.table}>
+        <TableContainer component={Paper} sx={tableSx}>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>তারিখ</TableCell>
-                        <TableCell className={classes.tableHeader} sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>অর্ডার আইডি</TableCell>
-                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>গ্রাহকের নাম</TableCell>
-                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>মোট টাকা</TableCell>
-                        <TableCell className={classes.tableHeader} sx={{ bgcolor: 'grey.900', color: 'common.white' }}>অ্যাকশন</TableCell>
+                        <TableCell sx={{ ...headerSx, bgcolor: 'grey.900', color: 'common.white' }}>তারিখ</TableCell>
+                        <TableCell sx={{ ...headerSx, display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>অর্ডার আইডি</TableCell>
+                        <TableCell sx={{ ...headerSx, bgcolor: 'grey.900', color: 'common.white' }}>গ্রাহকের নাম</TableCell>
+                        <TableCell sx={{ ...headerSx, bgcolor: 'grey.900', color: 'common.white' }}>মোট টাকা</TableCell>
+                        <TableCell sx={{ ...headerSx, bgcolor: 'grey.900', color: 'common.white' }}>অ্যাকশন</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -125,7 +104,7 @@ const BillsTable = (props) => {
                                 <TableCell>{formatAmount(bill.total)}</TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 1 }}>
-                                        <Link to={`/bills/${bill._id}`} className={classes.viewLink}>
+                                        <Link to={`/bills/${bill._id}`} style={{ textDecoration: 'none' }}>
                                             <Button 
                                                 size='small' 
                                                 variant='contained' 

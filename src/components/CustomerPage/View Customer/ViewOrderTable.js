@@ -1,17 +1,9 @@
 import React from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { englishToBengali } from '../../../utils/bengaliNumerals'
-
-const useStyle = makeStyles({
-    tableHeaderFooter: {
-        fontWeight: 600
-    }
-})
 
 const ViewOrderTable = (props) => {
     const { lineItems, total } = props
-    const classes = useStyle()
 
     return (
         <TableContainer>
@@ -43,8 +35,8 @@ const ViewOrderTable = (props) => {
                 </TableBody>
                 <TableFooter>
                     <TableRow>
-                        <TableCell colSpan={4} className={classes.tableHeaderFooter}>মোট টাকা</TableCell>
-                        <TableCell className={classes.tableHeaderFooter}>৳{englishToBengali(total)}</TableCell>
+                        <TableCell colSpan={4} sx={{ fontWeight: 600 }}>মোট টাকা</TableCell>
+                        <TableCell sx={{ fontWeight: 600 }}>৳{englishToBengali(total)}</TableCell>
                     </TableRow>
                 </TableFooter>
             </Table>

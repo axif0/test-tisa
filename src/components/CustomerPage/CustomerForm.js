@@ -1,34 +1,15 @@
 import React, { useState } from 'react'
 import { Box, TextField, Button, CircularProgress } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { useDispatch } from 'react-redux'
 import { asyncAddCustomer, asyncUpdateCustomer } from '../../action/customerAction'
 import validator from 'validator'
 
-const useStyle = makeStyles({
-    formField:{
-        width: '100%',
-        maxWidth: '250px',
-        marginRight: '1vw',
-        minWidth: '180px'
-    },
-    button: {
-        display: 'flex',
-        flexDirection:'row',
-        justifyContent: 'space-between',
-        gap: '8px'
-    },
-    addBtn: {
-        minWidth: '80px',
-        height: '40px',
-        marginTop: '7px'
-    },
-    cancelBtn: {
-        minWidth: '80px',
-        height: '40px',
-        marginTop: '7px'
-    }
-})
+const formFieldSx = {
+    width: '100%',
+    maxWidth: '250px',
+    mr: '1vw',
+    minWidth: '180px'
+}
 
 const CustomerForm = (props) => {
     const { name: custName, mobile: custMobile, email: custEmail, _id, resetUpdateCust, handleClose } = props
@@ -39,7 +20,6 @@ const CustomerForm = (props) => {
     const [ loading, setLoading ] = useState(false)
     const errors = {}
     const dispatch = useDispatch()
-    const classes = useStyle()
 
     const handleChange = (e) => {
         if(e.target.name==='name') {
@@ -102,7 +82,7 @@ const CustomerForm = (props) => {
             <form autoComplete='off' onSubmit={handleSubmit}>
                 <Box display='flex' flexDirection={handleClose ? 'column' : 'row'} flexWrap='wrap' gap={1}>
                     <TextField 
-                        className={classes.formField}
+                        sx={formFieldSx}
                         name='name'
                         label='Name'
                         value={name}
@@ -114,7 +94,7 @@ const CustomerForm = (props) => {
                         disabled={loading}
                     />
                     <TextField 
-                        className={classes.formField}
+                        sx={formFieldSx}
                         name='mobile'
                         label='Mobile'
                         value={mobile}
@@ -126,7 +106,7 @@ const CustomerForm = (props) => {
                         disabled={loading}
                     />
                     <TextField 
-                        className={classes.formField}
+                        sx={formFieldSx}
                         name='email'
                         label='Email Id'
                         value={email}
@@ -139,9 +119,9 @@ const CustomerForm = (props) => {
                     />
                     {
                         _id ? (
-                            <div className={classes.button}>
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '8px' }}>
                                 <Button 
-                                    className={classes.addBtn}
+                                    sx={{ minWidth: '80px', height: '40px', mt: '7px' }}
                                     type='submit'
                                     variant='contained' 
                                     color='primary'
@@ -151,7 +131,7 @@ const CustomerForm = (props) => {
                                     {loading ? 'Updating...' : 'Update'}
                                 </Button>
                                 <Button
-                                    className={classes.cancelBtn}
+                                    sx={{ minWidth: '80px', height: '40px', mt: '7px' }}
                                     variant='contained'
                                     color='secondary'
                                     onClick={resetUpdateCust}
@@ -161,9 +141,9 @@ const CustomerForm = (props) => {
                                 </Button>
                             </div>
                         ) : (
-                                <div className={classes.button}>
+                                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '8px' }}>
                                     <Button 
-                                        className={classes.addBtn}
+                                        sx={{ minWidth: '80px', height: '40px', mt: '7px' }}
                                         type='submit' 
                                         variant='contained' 
                                         color='primary'
@@ -175,7 +155,7 @@ const CustomerForm = (props) => {
                                     {
                                         (name.length>0 || email.length>0 || mobile.length>0) && (
                                             <Button 
-                                                className={classes.cancelBtn}
+                                                sx={{ minWidth: '80px', height: '40px', mt: '7px' }}
                                                 onClick = {resetForm} 
                                                 variant='contained' 
                                                 color='secondary'

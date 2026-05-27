@@ -1,22 +1,13 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { TextField, Box } from '@mui/material'
-import { Autocomplete } from '@mui/material'
-import { makeStyles } from '@mui/styles'
+import { TextField, Box, Autocomplete } from '@mui/material'
 import { englishToBengali } from '../../../utils/bengaliNumerals'
-
-const useStyle = makeStyles({
-    suggestionBox: {
-        position: 'relative'
-    }
-})
 
 const ProductSuggestion = (props) => {
     const { handleAddLineItem } = props
     const [ value, setValue ] = useState(null)
     const [ inputValue, setInputValue ] = useState('')
     const products = useSelector(state => state.products)
-    const classes = useStyle()
 
     const handleValueChange = (e, newValue) => {
         if (newValue) {
@@ -45,7 +36,7 @@ const ProductSuggestion = (props) => {
     }
 
     return (
-        <Box className={classes.suggestionBox}>
+        <Box sx={{ position: 'relative' }}>
             <Autocomplete 
                 value={value}
                 onChange={handleValueChange}

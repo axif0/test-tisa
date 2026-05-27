@@ -1,31 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, CircularProgress } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import { englishToBengali } from '../../utils/bengaliNumerals'
-
-const useStyle = makeStyles({
-    table: {
-        maxHeight: '380px',
-        overflow: 'auto'
-    },
-    nameHeader: {
-        width: '35%'
-    },
-    tableBtns:{
-        display: 'flex',
-        flexDirection:'row',
-        justifyContent: 'space-evenly'
-    },
-    tableHeader: {
-        position: 'sticky',
-        top: 0,
-        zIndex: 1
-    }
-})
 
 const ProductTable = (props) => {
     const { handleDeleteProduct, handleViewProduct, handleUpdateProd, products, resetSearch } = props
-    const classes = useStyle()
     const [deletingId, setDeletingId] = useState(null)
 
     const onDelete = async (id) => {
@@ -39,15 +17,15 @@ const ProductTable = (props) => {
     }
 
     return (
-        <TableContainer className={classes.table} component={Paper}>
+        <TableContainer component={Paper} sx={{ maxHeight: '380px', overflow: 'auto' }}>
             <Table stickyHeader size='small'>
                 <TableHead>
                     <TableRow>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white' }}>ক্রমিক</TableCell>
-                        <TableCell className={`${classes.nameHeader} ${classes.tableHeader}`} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>নাম</TableCell>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>দাম</TableCell>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>View</TableCell>
-                        <TableCell className={classes.tableHeader} align='center' sx={{ bgcolor: 'grey.900', color: 'common.white' }}>Action</TableCell>
+                        <TableCell align='center' sx={{ display: { xs: 'none', sm: 'table-cell' }, bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>ক্রমিক</TableCell>
+                        <TableCell align='center' sx={{ width: '35%', bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>নাম</TableCell>
+                        <TableCell align='center' sx={{ bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>দাম</TableCell>
+                        <TableCell align='center' sx={{ bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>View</TableCell>
+                        <TableCell align='center' sx={{ bgcolor: 'grey.900', color: 'common.white', position: 'sticky', top: 0, zIndex: 1 }}>Action</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

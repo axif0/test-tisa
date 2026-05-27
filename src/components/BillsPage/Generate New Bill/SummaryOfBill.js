@@ -1,23 +1,12 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
 import { Paper, Typography, Divider, Button, Container, CircularProgress } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import CustomerSuggestion from './CustomerSuggestion'
 import OrderDetails from './OrderDetails'
 import { useDispatch } from 'react-redux'
 import { asyncAddBill } from '../../../action/billsAction'
 
-const useStyle = makeStyles({
-    summaryContainer: {
-    }, 
-    title: {
-        fontWeight: '700',
-        textAlign: 'center'
-    }
-})
-
 const SummaryOfBill = (props) => {
-    const classes = useStyle()
     const { handleCustomerInfo, lineItems, customerInfo, isLoading } = props
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -37,7 +26,7 @@ const SummaryOfBill = (props) => {
             subTotal: item.subTotal
         }));
 
-        const total = lineItems.reduce((sum, item) => sum + item.subTotal, 0);
+        const total = lineItems.reduce((sum, item) => sum + (item.subTotal || 0), 0);
 
         const billData = {
             date: new Date(),
@@ -58,8 +47,8 @@ const SummaryOfBill = (props) => {
     }
 
     return (
-        <Paper elevation={3} className={classes.summaryContainer} sx={{ minHeight: { xs: 'auto', sm: '65vh' }, p: { xs: 2, sm: 0 } }}>
-            <Typography className={classes.title} variant='h5'>Summary of bill</Typography>
+        <Paper elevation={3} sx={{ minHeight: { xs: 'auto', sm: '65vh' }, p: { xs: 2, sm: 0 } }}>
+            <Typography sx={{ fontWeight: '700', textAlign: 'center' }} variant='h5'>Summary of bill</Typography>
             <Divider />
             <Container>
                 <CustomerSuggestion handleCustomerInfo={handleCustomerInfo} />

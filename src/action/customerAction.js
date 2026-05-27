@@ -65,9 +65,9 @@ export const asyncAddCustomer = (data, reset, closeModal) => {
             const newCustomer = { ...data, _id: crypto.randomUUID() }
             const updated = [...customers, newCustomer]
             dispatch(addCustomer(newCustomer))
+            await saveData('customers.json', updated)
             reset()
             if (closeModal) closeModal()
-            await saveData('customers.json', updated)
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
@@ -79,6 +79,7 @@ export const asyncDeleteCustomer = (id) => {
         try {
             const { customers } = getState()
             const customer = customers.find(c => c._id === id)
+            if (!customer) throw new Error('Customer not found')
             const updated = customers.filter(c => c._id !== id)
             dispatch(deleteCustomer(customer))
             await saveData('customers.json', updated)
@@ -95,8 +96,8 @@ export const asyncUpdateCustomer = (id, data, reset) => {
             const updatedCustomer = { _id: id, ...data }
             const updated = customers.map(c => c._id === id ? updatedCustomer : c)
             dispatch(updateCustomer(updatedCustomer))
-            reset()
             await saveData('customers.json', updated)
+            reset()
         } catch (err) {
             Swal.fire({ icon: 'error', title: 'Error', text: err.message })
         }
